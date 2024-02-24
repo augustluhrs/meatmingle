@@ -32,8 +32,8 @@ socket.on('baitPos', (data) => { //data is a Victor
 
 let gennies = [];
 // let randomFishButton, clearFishButton;
-let isBait = false;
-let baitPos = {x: 0, y: 0};
+// let isBait = false;
+// let baitPos = {x: 0, y: 0};
 
 function setup(){
     createCanvas(1920, 1080);

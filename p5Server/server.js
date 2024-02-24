@@ -1,5 +1,5 @@
 /*
-    ~ * ~ * ~ * VARIABLES
+    ~ * ~ * ~ * SERVER
     ~ * ~ * ~ * 
     ~ * ~ * ~ * 
     ~ * ~ * ~ * 
@@ -24,7 +24,12 @@ let ecosystemDB = new Datastore({filename: "databases/ecosystem.db", autoload: t
 //ecosystem variables
 const Genny = require("./public/modules/genny");
 let gennies = [];
+let lubeLocations = [];
 
+// structured clone for node 16
+const structuredClone = require('realistic-structured-clone');
+
+//socket variables
 var socket = require('socket.io');
 var io = socket(server, {
   //this allows external websites to connect
@@ -73,9 +78,10 @@ screen.on('connection', (socket) => {
   console.log('new screen client!: ' + socket.id);
 
   socket.on("makeGenny", () => {
-    addRandomFish();
+    addRandomGenny();
   });
   
+  /*
   socket.on("clearFish", () => {
     school = [];
   });
@@ -93,9 +99,42 @@ screen.on('connection', (socket) => {
     // baitVec.mix(dataVec, 0.4);
     screen.emit("baitPos", baitPos);
   });
+  */
 
   //listen for this client to disconnect
   socket.on('disconnect', () => {
     console.log('screen client disconnected: ' + socket.id);
   });
 });
+
+// SERVER LOOP
+setInterval( () => {
+  let oldGennies = structuredClone(gennies);
+  for (let genny of gennies) {
+    genny.frolic(oldGennies, lubeLocations);
+  }
+
+  screen.emit("update", {gennies: gennies});
+}, 10);
+
+
+function addRandomGenny(){
+  /*
+  let xAxis = Math.floor(Math.random() * 16);
+  let yAxis = Math.floor(Math.random() * 16);
+
+  let stats = {
+    name: "Fish " + school.length,
+    primaryColor: D.randomHex(),
+    secondaryColor: D.randomHex(),
+    strength: yAxis,
+    defense: 16 - yAxis,
+    speed: xAxis,
+    size: 16 - xAxis
+  }
+
+  school.push(new Fish(stats));
+  */
+  console.log("TODO");
+  console.log('new Genny');
+}

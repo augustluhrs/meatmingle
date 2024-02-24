@@ -15,19 +15,23 @@ body {
 .inputs {
   /* display: flex; */
   /* margin: auto; */
-  font-size: 300%;
-  font-family: "jua";
+  font-size: 150%;
+  font-family: "fugaz";
   text-align: center;
-  background-color: rgb(6, 82, 149);
+  background-color: rgb(108,112,45);
   color: white;
+   /* Set the input to allow wrapping, thanks chat GPT*/
+   white-space: normal;
+   word-wrap: break-word; /* For older browsers */
+   overflow-wrap: break-word; /* For newer browsers */
 }
 
 .buttons {
   margin: auto;
-  background-color: rgb(6, 82, 149);
+  background-color: rgb(108,112,45);
   color: white;
 /*   font-size: 120%; */
-  font-family: "jua";
+  font-family: "fugaz";
   text-align: center;
   border-radius: 12px;
   transition-duration: 0.4s;
@@ -36,5 +40,5 @@ body {
 
 .buttons:hover {
   background-color: white;
-  color: rgb(6, 82, 149);
+  color: rgb(108,112,45);
 }
