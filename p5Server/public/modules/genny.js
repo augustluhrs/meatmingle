@@ -1,6 +1,6 @@
 class Genny {
-  constructor(){
-
+  constructor(data){
+    this.poem = data.poem;
   }
 
   frolic(gennies, lubeLocations){
@@ -11,3 +11,5 @@ class Genny {
 
   }
 }
+
+module.exports = Genny;

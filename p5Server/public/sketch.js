@@ -45,6 +45,10 @@ let statsSlider = {
 // GENNY VARIABLES
 
 let genny = {
+  poem: "",
+  body: 0,
+  genitalia: 0,
+  hair: 0,
   primaryColor: randomHex(),
   secondaryColor: randomHex(),
   hairColor: randomHex(),
@@ -254,6 +258,8 @@ function mouseDragged(){
 
 function updateGenny(){  
     //color updated in pickers
+    genny.poem = poemInput.value();
+    
     genny.prolific = statsSlider.yVal;
     genny.prepared = 16 - statsSlider.yVal;
     genny.thirsty = statsSlider.xVal;
@@ -307,7 +313,10 @@ function displayStatsSlider(){
     //indicator ellipse
     stroke(0);
     fill(255);
-    ellipse(ss.xPos, ss.yPos, ss.w / 12);
+    ellipse(ss.xPos - ss.w / 24, ss.yPos + ss.w / 12, ss.w / 12);
+    ellipse(ss.xPos + ss.w / 24, ss.yPos + ss.w / 12, ss.w / 12);
+    ellipse(ss.xPos, ss.yPos, ss.w / 12, ss.w/6);
+
 
     //labels
     textSize(width/20);
@@ -339,7 +348,7 @@ function checkType(){
         orientation = "orgy mom"
       } else if (genny.prepared > genny.thirsty && genny.thirsty > genny.generous) {
         orientation = "dungeon dom"
-      } else if (genny.thirsty > genny.prepared && genny.prepared > genny.generous) {
+      } else if (genny.thirsty > genny.prepared && genny.prepared > genny.prolific) {
         orientation = "sauna swiper"
       } else if (genny.thirsty > genny.prolific && genny.prolific > genny.prepared) {
         orientation = "relationship libertarian"
