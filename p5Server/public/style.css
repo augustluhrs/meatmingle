@@ -1,0 +1,16 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  /* overflow: hidden; */
+}
+
+canvas {
+  display: block; 
+}
+
+/* https://dev.to/ashwamegh/how-to-hide-scrollbar-from-any-html-element-dae */
+/* https://www.w3schools.com/css/css_pseudo_elements.asp */
+.scroll-hide::-webkit-scrollbar { 
+  width: 0 !important;
+  display: none; 
+}
