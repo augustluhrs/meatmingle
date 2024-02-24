@@ -1,6 +1,6 @@
 {
   "name": "meatmingle",
-  "version": "0.1",
+  "version": "1.0.0",
   "main": "server.js",
   "repository": "git@github.com:augustluhrs/meatmingle.git",
   "author": "August Luhrs <augustluhrs@gmail.com>",
@@ -8,6 +8,7 @@
   "private": false,
   "dependencies": {
     "express": "^4.18.2",
+    "nedb": "^1.8.0",
     "socket.io": "^4.7.4"
   },
   "scripts": {
