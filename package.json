@@ -1,0 +1,16 @@
+{
+  "name": "meatmingle",
+  "version": "0.1",
+  "main": "server.js",
+  "repository": "git@github.com:augustluhrs/meatmingle.git",
+  "author": "August Luhrs <augustluhrs@gmail.com>",
+  "license": "CC-BY-NC",
+  "private": false,
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.4"
+  },
+  "scripts": {
+    "start": "cd p5Server && node server.js"
+  }
+}
