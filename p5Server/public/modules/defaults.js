@@ -1,8 +1,8 @@
 //stores common functions and variable options
 
 const options = {
-  minRadius: 10,
-  maxRadius: 50,
+  minRadius: 20,
+  maxRadius: 80,
   minSpeed: 1,
   maxSpeed: 15,
   minRefractory: 5000,
@@ -101,6 +101,10 @@ function hexToHSL(hex) { //from chat-GPT
   return [h, s, l]; //normalized
 }
 
+function generateID() { //grabbed from https://gist.github.com/gordonbrander/2230317 -- thanks!
+  return '_' + Math.random().toString(36).substr(2, 9);
+}
+
 module.exports.options = options;
 module.exports.ecoWidth = ecoWidth;
 module.exports.ecoHeight = ecoHeight;
@@ -108,3 +112,4 @@ module.exports.map = map;
 module.exports.rand_bm = rand_bm;
 module.exports.hexToRGB = hexToRGB;
 module.exports.hexToHSL = hexToHSL;
+module.exports.generateID = generateID;

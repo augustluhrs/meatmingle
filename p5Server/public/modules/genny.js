@@ -22,6 +22,7 @@ class Genny {
     //new Genny from client or from mating?
     console.log(source);
     if (source == "client") {
+      this.id = data.id;
       this.poem = data.poem;
       //obscenity censor
       let matches = matcher.getAllMatches(this.poem);
@@ -44,7 +45,8 @@ class Genny {
       this.lubeEfficiency = D.map(data.prepared, 0, 16, 0, 1);
       this.minLubeToMate = D.options.minLubeToMate;
 
-      this.radius = D.map(data.generous, 0, 16, D.options.minRadius, D.options.maxRadius);
+      // this.radius = D.map(data.generous, 0, 16, D.options.minRadius, D.options.maxRadius);
+      this.radius = D.map(data.generous, 0, 16, 0, 1);
       this.pos = new Victor(Math.random() * D.ecoWidth, Math.random() * D.ecoHeight);
       this.wetness = D.options.maxWetness;
       this.DNA = new DNA(this);
@@ -54,6 +56,7 @@ class Genny {
       this.pos = new Victor(parentA.pos.x, parentB.pos.y);
       this.wetness = data.inheritance;
       this.DNA = new DNA()
+      this.id = D.generateID();
 
       //crossover
       //randomly split poems in two sections and smash together
@@ -166,11 +169,14 @@ class Genny {
     this.lubeEfficiency = D.map(this.DNA.genes[6], 0, 1, D.options.minLubeEfficiency, D.options.maxLubeEfficiency)
     // this.minLubeToMate = D.map(this.DNA.genes[6], 0, 1, D.options.minLubeToMate, D.options.maxLubeToMate);
 
+    this.direction = 0;
     //timers
     this.mateTimer = 0;
     this.lubeTimer = 0; //ticks down and subtracts wetness before resetting
 
     //states
+    this.isHorny = false;
+    this.isTooDry = false;
     this.isReadyToMate = false;
     this.isMating = false;
 
@@ -188,14 +194,29 @@ class Genny {
       this.wetness --;
     }
 
-  }
-
-  display(){
-    if (this.mateTimer >= this.refractoryPeriod && this.wetness >= this.minLubeToMate) {
-      this.isReadyToMate = true;
+    //check to see if too dry
+    if (this.wetness <= this.minLubeToMate) {
+      this.isTooDry = true;
+    } else {
+      this.isTooDry = false;
+    }
+    //check to see if refractory period
+    if (this.mateTimer >= this.refractoryPeriod) {
+      this.isHorny = true;
     } else {
       // this.isReadyToMate = false; //no, should switch off in mate function
     }
+
+    //check if ready to mate
+    if (this.isHorny && !this.isTooDry) {
+      this.isReadyToMate = true;
+    } else {
+      this.isReadyToMate = false;
+    }
+  }
+
+  display(){
+    
 
     let pos = {x: this.pos.x, y: this.pos.y};
     return {pos: pos, genny: this}; //hmm....

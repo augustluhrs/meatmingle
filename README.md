@@ -19,6 +19,10 @@
 - creation UI based on previous project prototype [Fist Fillet](https://github.com/augustluhrs/FishFight/)
 - profanity filtering via [Obscenity](https://www.npmjs.com/package/obscenity)
 
+### Assets
+
+- [body blob 1](https://www.pinclipart.com/maxpin/ibJxoTm/)
+
 ## License
 
 CC-BY-NC

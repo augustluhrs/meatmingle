@@ -49,11 +49,13 @@ inputs.on('connection', (socket) => {
   console.log('new input client!: ' + socket.id);
 
   socket.on("makeGenny", (data) => {
+    data.id = D.generateID();
     console.log("new genny from " + socket.id);
     console.log(data);
-    gennies.push(new Genny("client", data));
+    let newGenny = new Genny("client", data);
+    gennies.push(newGenny);
     
-    // io.emit("makeGenny", data); //handled on update
+    screen.emit("newGenny", newGenny);
   });
 
   //listen for this client to disconnect
@@ -70,6 +72,14 @@ screen.on('connection', (socket) => {
 
   socket.on("makeGenny", () => {
     addRandomGenny();
+  });
+
+  socket.on("getEcosystem", (socket) => { //when screen resets
+    console.log('sending screen the current gennies');
+    for (let genny of gennies) {
+      screen.emit("newGenny", genny); //hmm forgot emit rules TODO
+    }
+    console.log('test');
   });
   
   /*
