@@ -47,7 +47,7 @@ let statsSlider = {
 let genny = {
   poem: "",
   body: 0,
-  genitalia: 0,
+  zones: 0,
   hair: 0,
   primaryColor: randomHex(),
   secondaryColor: randomHex(),
@@ -58,17 +58,6 @@ let genny = {
   generous: 16 - xAxis,
   position: {x: 0, y: 0}, //will get overwritten on server
 }
-
-//from defaults.js
-/*
-const displayScale = 1.8;
-const finMin = 3 * displayScale;
-const finMax = 40 * displayScale;
-const widthMin = 10 * displayScale;
-const widthMax = 80 * displayScale;
-const lengthMin = 50 * displayScale;
-const lengthMax = 100 * displayScale;
-*/
 
 function preload(){
   font = loadFont('assets/fonts/fugaz.ttf');
@@ -107,13 +96,11 @@ function setup(){
     colorPickerHair.hide();
 
     //UI
-    // nameInput = createInput("TYPE GENNY NAME").class("inputs").position(0, 0).size(width - 50, height/10);
-    // nameInput.center("horizontal");
-    poemInput = createInput("type a line of poetry here (max 16 words)").class("inputs").position(0, 0).size(width - 50, 2 * height/10);
+    poemInput = createInput("type a line of poetry here (max 16 words)").class("inputs").position(0, 0).size(width - 50, 1.5 * height/10);
     poemInput.center("horizontal");
 
     statsDiv = createDiv("").id("statsDiv").class("divs").position(0, 9 * height/10).size(width/3, height/10);
-    statsButton = createButton("STATS").class("buttons").mousePressed(() => {
+    statsButton = createButton("personality").class("buttons").mousePressed(() => {
         state = "stats";
         colorPickerPrimary.hide();
         colorPickerSecondary.hide();
@@ -122,7 +109,7 @@ function setup(){
     statsButton.size(width/5, height/14).parent("statsDiv");
 
     colorDiv = createDiv("").id("colorDiv").class("divs").position(width/3, 9 * height/10).size(width/3, height/10);
-    colorButton = createButton("COLOR").class("buttons").mousePressed(() => {
+    colorButton = createButton("looks").class("buttons").mousePressed(() => {
         state = "color";
         colorPickerPrimary.show();
         colorPickerSecondary.show();
@@ -131,7 +118,7 @@ function setup(){
     colorButton.size(width/5, height/14).parent("colorDiv");
 
     readyDiv = createDiv("").id("readyDiv").class("divs").position(2*width/3, 9 * height/10).size(width/3, height/10);
-    readyButton = createButton("READY").class("buttons").mousePressed(() => {
+    readyButton = createButton("ready").class("buttons").mousePressed(() => {
         state = "ready";
         yesButton.show();
         noButton.show();
@@ -206,7 +193,7 @@ function draw(){
     stroke(0);
     fill(255);
     textSize(width/15);
-    text("Genny off to get off!", width / 2, height / 4, width - 40);
+    text("Your Genny's off to get off!", width / 2, height / 4, width - 40);
     text("Refresh to make a new Genny!", width / 2, 3 * height / 4, width - 40);
     pop();
   } else {
@@ -214,6 +201,7 @@ function draw(){
     background(243,169,176); //pink
     push();
     stroke(0);
+    strokeWeight(3);
     fill(255);
     // textSize(width/20);
     // text("the", width / 2, 1.65 * height / 10);
@@ -253,7 +241,6 @@ function mouseDragged(){
             ss.yVal = map(ss.yPos, ss.yCenter - ss.h / 2, ss.yCenter + ss.h / 2, 16, 0);
         }
     }
-    
 }
 
 function updateGenny(){  
@@ -264,12 +251,6 @@ function updateGenny(){
     genny.prepared = 16 - statsSlider.yVal;
     genny.thirsty = statsSlider.xVal;
     genny.generous = 16 - statsSlider.xVal;
-    /*
-    genny.bodyLength = map(genny.generous, 16, 0, lengthMin, lengthMax);
-    genny.bodyWidth = map(genny.generous, 0, 16, widthMin, widthMax);
-    genny.frontFinSize = map(genny.prolific, 0, 16, finMin, finMax);
-    genny.backFinSize = map(genny.prepared, 0, 16, finMin, finMax);
-    */
 }
 
 function displayGenny(){
@@ -311,14 +292,17 @@ function displayStatsSlider(){
     line(ss.xCenter, ss.yCenter - ss.h / 2, ss.xCenter, ss.yCenter + ss.h / 2);
 
     //indicator ellipse
-    stroke(0);
-    fill(255);
-    ellipse(ss.xPos - ss.w / 24, ss.yPos + ss.w / 12, ss.w / 12);
-    ellipse(ss.xPos + ss.w / 24, ss.yPos + ss.w / 12, ss.w / 12);
+    push();
+    // stroke(0);
+    noStroke();
+    fill(108,112,45); //olive
+    ellipse(ss.xPos - ss.w / 36, ss.yPos + ss.w / 12, ss.w / 12);
+    ellipse(ss.xPos + ss.w / 36, ss.yPos + ss.w / 12, ss.w / 12);
     ellipse(ss.xPos, ss.yPos, ss.w / 12, ss.w/6);
-
+    pop();
 
     //labels
+    fill(255);
     textSize(width/20);
     textAlign(CENTER, BOTTOM);
     text("prolific", ss.xCenter, ss.yCenter - ss.h / 1.9);
