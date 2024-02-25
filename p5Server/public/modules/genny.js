@@ -15,6 +15,7 @@ class Genny {
         D.hexToHSL(data.colors[1]),
         D.hexToHSL(data.colors[2])
       ]
+      this.looks = [ data.body, data.zones, data.hair ];
       //we get normalized values from creator, need to map to Defaults
       this.radius = data.radius; 
       this.maxSpeed = data.maxSpeed;
@@ -33,8 +34,8 @@ class Genny {
 
       //crossover
       //randomly split poems in two sections and smash together
-      let poemA = parentA.split(" ");
-      let poemB = parentB.split(" ");
+      let poemA = parentA.poem.split(" ");
+      let poemB = parentB.poem.split(" ");
 
       let splitA = Math.floor(Math.random() * poemA.length);
       let splitB = Math.floor(Math.random() * poemB.length);
@@ -44,6 +45,19 @@ class Genny {
       this.poem = [firstHalf, secondHalf].join(" ");
       this.DNA.genes[0] = this.poem;
       console.log(this.poem);
+
+      //looks don't lerp, they just pick from each parent randomly
+      //awww... he has your penises!
+      let looksA = parentA.looks;
+      let looksB = parentB.looks;
+      this.looks = [];
+      for (let i = 0; i < 3; i++){
+        if (Math.random() > .5) {
+          this.looks.push(looksA[i]);
+        } else {
+          this.looks.push(looksB[i]);
+        }
+      }
 
       //lerp between parent colors to get child colors
       let hueLerp;

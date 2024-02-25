@@ -49,9 +49,10 @@ let genny = {
   body: 0,
   zones: 0,
   hair: 0,
-  primaryColor: randomHex(),
-  secondaryColor: randomHex(),
-  hairColor: randomHex(),
+  colors: [ randomHex(), randomHex(), randomHex() ],
+  // primaryColor: randomHex(),
+  // secondaryColor: randomHex(),
+  // hairColor: randomHex(),
   prolific: yAxis,
   prepared: 16 - yAxis,
   thirsty: xAxis,
@@ -137,11 +138,11 @@ function setup(){
         genny.poem = poemInput.value();
 
         //reset sizes? hmm....
-        delete genny.bodyLength;
-        delete genny.bodyWidth;
-        delete genny.frontFinSize;
-        delete genny.backFinSize;
-        delete genny.position;
+        // delete genny.bodyLength;
+        // delete genny.bodyWidth;
+        // delete genny.frontFinSize;
+        // delete genny.backFinSize;
+        // delete genny.position;
         
         socket.emit("sendGenny", genny);
         // nameInput.hide();
