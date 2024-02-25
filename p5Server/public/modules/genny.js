@@ -3,11 +3,30 @@ const Victor = require("victor");
 const lerp = require("lerp");
 const D = require("./defaults");
 
+//poem moderation library
+const {
+	RegExpMatcher,
+	TextCensor,
+	englishDataset,
+	englishRecommendedTransformers,
+} = require('obscenity');
+
+const matcher = new RegExpMatcher({
+	...englishDataset.build(),
+	...englishRecommendedTransformers,
+});
+const censor = new TextCensor();
+
 class Genny {
   constructor(source, data){
     //new Genny from client or from mating?
     if (source == "client") {
       this.poem = data.poem;
+      //obscenity censor
+      let matches = matcher.getAllMatches(this.poem);
+      console.log("matches: \n", matches);
+      this.poem = censor.applyTo(this.poem, matches);
+      console.log(this.poem);
       // this.colors = data.colors;
       //need to convert hex to HSL for lerp later
       this.colors = [
@@ -43,8 +62,15 @@ class Genny {
       let firstHalf = poemA.slice(0, splitA);
       let secondHalf = poemB.slice(splitB);
       this.poem = [firstHalf, secondHalf].join(" ");
-      this.DNA.genes[0] = this.poem;
+
+      //obscenity censor
+      let matches = matcher.getAllMatches(this.poem);
+      this.poem = censor.applyTo(this.poem, matches);
       console.log(this.poem);
+
+      this.DNA.genes[0] = this.poem;
+
+      //TODO length max
 
       //looks don't lerp, they just pick from each parent randomly
       //awww... he has your penises!
