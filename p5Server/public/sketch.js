@@ -164,6 +164,17 @@ function setup(){
     });
     noButton.hide();
 
+    //css font-size
+    let inputs = document.getElementsByClassName('inputs');
+    let classText = (width/50).toString() + "px";
+    for (let input of inputs) {
+      input.style.fontSize = classText;
+    }
+    let buttons = document.getElementsByClassName('buttons');
+    for (let butt of buttons) {
+      butt.style.fontSize = classText;
+    }
+
     //stats slider
     statsSlider = {
         xVal: genny.thirsty,

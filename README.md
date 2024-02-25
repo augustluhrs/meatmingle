@@ -12,15 +12,12 @@
 
 ## Credits
 
-<!-- ### Unreal Ecosystem
-
-- GoodSky plugin -->
-
 ### p5 client/server
 
 - glitch hosting
 - evolutionary algorithms from [Twitch Plays God](https://github.com/augustluhrs/Twitch_Plays_God) (originally from Dan Shiffman's [Nature of Code](https://natureofcode.com/))
 - creation UI based on previous project prototype [Fist Fillet](https://github.com/augustluhrs/FishFight/)
+- profanity filtering via [Obscenity](https://www.npmjs.com/package/obscenity)
 
 ## License
 

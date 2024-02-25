@@ -63,7 +63,7 @@ class Genny {
       let secondHalf = poemB.slice(splitB);
       this.poem = [firstHalf, secondHalf].join(" ");
 
-      //obscenity censor
+      //obscenity censoruh
       let matches = matcher.getAllMatches(this.poem);
       this.poem = censor.applyTo(this.poem, matches);
       console.log(this.poem);
