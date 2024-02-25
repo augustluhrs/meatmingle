@@ -25,9 +25,10 @@ socket.on('newGenny', (data) => {
         [genny.colors[2][0] * 360, genny.colors[2][1] * 100, genny.colors[2][2] * 100]
     ];
 
+    /*
     //add images and tint/resize
     // let c = createGraphics(genny.radius * 2, genny.radius * 2);
-    let c = createGraphics(200, 200);
+    let c = createGraphics(100, 100);
     c.tint(gennyColors[0][0], gennyColors[0][1], gennyColors[0][2]);
     c.image(images.body[genny.looks[0]], c.width/2, c.height/2, genny.radius, genny.radius);
     
@@ -43,9 +44,11 @@ socket.on('newGenny', (data) => {
 
     c.tint(gennyColors[2][0], gennyColors[2][1], gennyColors[2][2]);
     c.image(images.body[genny.looks[2]], c.width/2, c.height/2, genny.radius, genny.radius);
+*/
+    // gennyLooks.push({id: genny.id, c: c, colors: gennyColors});
+    gennyLooks.push({id: genny.id, colors: gennyColors});
 
-    gennyLooks.push({id: genny.id, c: c, colors: gennyColors});
-    console.log("new gennyLooks", c);
+    // console.log("new gennyLooks", c);
     
 
 });
@@ -193,7 +196,6 @@ function showGenny(gennyData){
             tint(look.colors[2][0], look.colors[2][1], look.colors[2][2]);
             image(images.hair[genny.looks[2]], 0, 0, genny.radius, genny.radius);
             pop();
-
 
             //face
             push();

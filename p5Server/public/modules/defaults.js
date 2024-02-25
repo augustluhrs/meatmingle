@@ -1,8 +1,8 @@
 //stores common functions and variable options
 
 const options = {
-  minRadius: 20,
-  maxRadius: 80,
+  minRadius: 50,
+  maxRadius: 120,
   minSpeed: 1,
   maxSpeed: 15,
   minRefractory: 5000,
