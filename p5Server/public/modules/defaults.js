@@ -7,10 +7,12 @@ const options = {
   maxSpeed: 15,
   minRefractory: 5000,
   maxRefractory: 30000,
-  minInheritance: 5,
+  minInheritance: 2,
   maxInheritance: 50,
-  minLubeToMate: 5,
-  maxLubeToMate: 50,
+  minLubeToMate: 5, //now making this global so prepared makes more sense
+  // maxLubeToMate: 50,
+  minLubeEfficiency: 1,
+  maxLubeEfficiency: 100,
   maxWetness: 100, //upper range of dryness value
   mutationRate: 0.03,
   lubeTimer: 1000,
@@ -53,6 +55,12 @@ function hexToRGB(hex) {
 
 function hexToHSL(hex) { //from chat-GPT
   // Convert hex to RGB first
+  let rgb = hexToRGB(hex);
+  let r = rgb.r;
+  let g = rgb.g;
+  let b = rgb.b;
+
+  /*
   let r = 0, g = 0, b = 0;
   if (hex.length === 4) {
     r = parseInt(hex[1] + hex[1], 16);
@@ -63,8 +71,13 @@ function hexToHSL(hex) { //from chat-GPT
     g = parseInt(hex.slice(3, 5), 16);
     b = parseInt(hex.slice(5, 7), 16);
   } else {
-    throw new Error("Invalid hex color: " + hex);
+    //some sort of error, replace with random to avoid breaking server
+    
   }
+  */
+  // } else {
+  //   throw new Error("Invalid hex color: " + hex);
+  // }
 
   // Convert RGB to HSL
   r /= 255, g /= 255, b /= 255;

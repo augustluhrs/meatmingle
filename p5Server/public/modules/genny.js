@@ -20,11 +20,12 @@ const censor = new TextCensor();
 class Genny {
   constructor(source, data){
     //new Genny from client or from mating?
+    console.log(source);
     if (source == "client") {
       this.poem = data.poem;
       //obscenity censor
       let matches = matcher.getAllMatches(this.poem);
-      console.log("matches: \n", matches);
+      console.log("profanity matches: \n", matches);
       this.poem = censor.applyTo(this.poem, matches);
       console.log(this.poem);
       // this.colors = data.colors;
@@ -35,12 +36,15 @@ class Genny {
         D.hexToHSL(data.colors[2])
       ]
       this.looks = [ data.body, data.zones, data.hair ];
-      //we get normalized values from creator, need to map to Defaults
-      this.radius = data.radius; 
-      this.maxSpeed = data.maxSpeed;
-      this.refractoryPeriod = data.refractoryPeriod;
-      this.childInheritance = data.childInheritance;
-      this.minLubeToMate = data.minLubeToMate;
+
+      //we don't get normalized values from creator, need to map to Defaults
+      this.maxSpeed = D.map(data.thirsty, 0, 16, 0, 1); 
+      this.refractoryPeriod = D.map(data.prolific, 0, 16, 0, 1); 
+      this.childInheritance = D.map(data.generous, 0, 16, 0, 1); 
+      this.lubeEfficiency = D.map(data.prepared, 0, 16, 0, 1);
+      this.minLubeToMate = D.options.minLubeToMate;
+
+      this.radius = D.map(data.generous, 0, 16, D.options.minRadius, D.options.maxRadius);
       this.pos = new Victor(Math.random() * D.ecoWidth, Math.random() * D.ecoHeight);
       this.wetness = D.options.maxWetness;
       this.DNA = new DNA(this);
@@ -63,7 +67,7 @@ class Genny {
       let secondHalf = poemB.slice(splitB);
       this.poem = [firstHalf, secondHalf].join(" ");
 
-      //obscenity censoruh
+      //obscenity censor
       let matches = matcher.getAllMatches(this.poem);
       this.poem = censor.applyTo(this.poem, matches);
       console.log(this.poem);
@@ -157,9 +161,10 @@ class Genny {
     this.colors = this.DNA.genes[1];
     this.radius = D.map(this.DNA.genes[2], 0, 1, D.options.minRadius, D.options.maxRadius);
     this.maxSpeed = D.map(this.DNA.genes[3], 0, 1, D.options.minSpeed, D.options.maxSpeed);
-    this.refractoryPeriod = D.map(this.DNA.genes[4], 0, 1, D.options.minRefractory, D.options.maxRefminRefractory);
+    this.refractoryPeriod = D.map(this.DNA.genes[4], 0, 1, D.options.minRefractory, D.options.maxRefractory);
     this.childInheritance = D.map(this.DNA.genes[5], 0, 1, D.options.minInheritance, D.options.maxInheritance);
-    this.minLubeToMate = D.map(this.DNA.genes[6], 0, 1, D.options.minLubeToMate, D.options.maxLubeToMate);
+    this.lubeEfficiency = D.map(this.DNA.genes[6], 0, 1, D.options.minLubeEfficiency, D.options.maxLubeEfficiency)
+    // this.minLubeToMate = D.map(this.DNA.genes[6], 0, 1, D.options.minLubeToMate, D.options.maxLubeToMate);
 
     //timers
     this.mateTimer = 0;
@@ -168,6 +173,9 @@ class Genny {
     //states
     this.isReadyToMate = false;
     this.isMating = false;
+
+    console.log("server genny:");
+    console.log(this);
   }
 
 

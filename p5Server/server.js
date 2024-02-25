@@ -26,6 +26,10 @@ const D = require("./public/modules/defaults");
 const Genny = require("./public/modules/genny");
 let gennies = [];
 let lubeLocations = [];
+// let updates = {
+//   gennies: [],
+//   lubeLocations: [],
+// };
 
 // structured clone for node 16
 const structuredClone = require('realistic-structured-clone');
@@ -44,11 +48,12 @@ var inputs = io.of('/')
 inputs.on('connection', (socket) => {
   console.log('new input client!: ' + socket.id);
 
-  socket.on("sendGenny", (data) => {
-    gennies.push(new Genny(data));
+  socket.on("makeGenny", (data) => {
     console.log("new genny from " + socket.id);
     console.log(data);
-    io.emit("makeGenny", data);
+    gennies.push(new Genny("client", data));
+    
+    // io.emit("makeGenny", data); //handled on update
   });
 
   //listen for this client to disconnect
@@ -95,12 +100,21 @@ screen.on('connection', (socket) => {
 
 // SERVER LOOP
 setInterval( () => {
+  let updates = {
+    gennies: [],
+    lubeLocations: [],
+  };
+
   let oldGennies = structuredClone(gennies);
   for (let genny of gennies) {
     genny.frolic(oldGennies, lubeLocations);
+
+  }
+  for (let genny of gennies) {
+    updates.gennies.push(genny.display());
   }
 
-  screen.emit("update", {gennies: gennies});
+  screen.emit("update", updates);
 }, 10);
 
 

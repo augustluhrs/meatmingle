@@ -1,5 +1,6 @@
 //only used for offspring generation
 //normalized range so ecosystem can adjust all at once if needed
+//(not for radius or minLube rn)
 class DNA {
   constructor(data){
     if (data !== undefined){ //user created Genny, needs to create DNA

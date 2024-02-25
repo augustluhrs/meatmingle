@@ -46,7 +46,7 @@ let statsSlider = {
 
 let genny = {
   poem: "",
-  body: 0,
+  body: 0, //on server, looks array [body, zones, hair]
   zones: 0,
   hair: 0,
   colors: [ randomHex(), randomHex(), randomHex() ],
@@ -80,24 +80,24 @@ function setup(){
     strokeWeight(2);
 
     //color pickers
-    colorPickerPrimary = createColorPicker(genny.primaryColor).position(width/4, 5.5 * height/10).size(width/2, height/14);
+    colorPickerPrimary = createColorPicker(genny.colors[0]).position(width/4, 5.5 * height/10).size(width/2, height/14);
     colorPickerPrimary.input(()=>{
-        genny.primaryColor = colorPickerPrimary.value();
+        genny.colors[0] = colorPickerPrimary.value();
     });
     colorPickerPrimary.hide();
-    colorPickerSecondary = createColorPicker(genny.secondaryColor).position(width/4, 6.5 * height/10).size(width/2, height/14);
+    colorPickerSecondary = createColorPicker(genny.colors[1]).position(width/4, 6.5 * height/10).size(width/2, height/14);
     colorPickerSecondary.input(()=>{
-        genny.secondaryColor = colorPickerSecondary.value();
+        genny.colors[1] = colorPickerSecondary.value();
     });
     colorPickerSecondary.hide();
-    colorPickerHair = createColorPicker(genny.hairColor).position(width/4, 7.5 * height/10).size(width/2, height/14);
+    colorPickerHair = createColorPicker(genny.colors[2]).position(width/4, 7.5 * height/10).size(width/2, height/14);
     colorPickerHair.input(()=>{
-        genny.hairColor = colorPickerHair.value();
+        genny.colors[2] = colorPickerHair.value();
     });
     colorPickerHair.hide();
 
     //UI
-    poemInput = createInput("type a line of poetry here (max 16 words)").class("inputs").position(0, 0).size(width - 50, 1.5 * height/10);
+    poemInput = createInput("type a line of poetry here (2-16 words)").class("inputs").position(0, 0).size(width - 50, 1.5 * height/10);
     poemInput.center("horizontal");
     poemInput.elt.addEventListener('focus', function(event) { //thanks chat gpt
       event.target.value = '';
@@ -148,7 +148,7 @@ function setup(){
         // delete genny.backFinSize;
         // delete genny.position;
         
-        socket.emit("sendGenny", genny);
+        socket.emit("makeGenny", genny);
         // nameInput.hide();
         poemInput.hide();
         yesButton.hide();
