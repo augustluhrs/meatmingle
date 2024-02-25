@@ -99,6 +99,10 @@ function setup(){
     //UI
     poemInput = createInput("type a line of poetry here (max 16 words)").class("inputs").position(0, 0).size(width - 50, 1.5 * height/10);
     poemInput.center("horizontal");
+    poemInput.elt.addEventListener('focus', function(event) { //thanks chat gpt
+      event.target.value = '';
+      event.target.removeEventListener('focus', arguments.callee)
+    })
 
     statsDiv = createDiv("").id("statsDiv").class("divs").position(0, 9 * height/10).size(width/3, height/10);
     statsButton = createButton("personality").class("buttons").mousePressed(() => {
@@ -179,7 +183,7 @@ function setup(){
     statsSlider = {
         xVal: genny.thirsty,
         yVal: genny.prolific,
-        xCenter: width/2,
+        xCenter: width/2 + 5, //slight off-center b/c mobile weird idk
         yCenter: 6.75 * height / 10,
         w: 3 * height / 10,
         h: 3 * height / 10,
