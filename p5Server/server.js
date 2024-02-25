@@ -24,6 +24,7 @@ let ecosystemDB = new Datastore({filename: "databases/ecosystem.db", autoload: t
 //ecosystem variables
 const D = require("./public/modules/defaults");
 const Genny = require("./public/modules/genny");
+const Lube = require("./public/modules/lube");
 let gennies = [];
 let lubeLocations = [];
 // let updates = {
@@ -46,12 +47,12 @@ var io = socket(server, {
 var inputs = io.of('/')
 //listen for anyone connecting to default namespace
 inputs.on('connection', (socket) => {
-  console.log('new input client!: ' + socket.id);
+  // console.log('new input client!: ' + socket.id);s
 
   socket.on("makeGenny", (data) => {
     data.id = D.generateID();
-    console.log("new genny from " + socket.id);
-    console.log(data);
+    // console.log("new genny from " + socket.id);
+    // console.log(data);
     let newGenny = new Genny("client", data);
     gennies.push(newGenny);
     
@@ -60,7 +61,7 @@ inputs.on('connection', (socket) => {
 
   //listen for this client to disconnect
   socket.on('disconnect', () => {
-    console.log('input client disconnected: ' + socket.id);
+    // console.log('input client disconnected: ' + socket.id);
   });
 
 });
@@ -68,18 +69,22 @@ inputs.on('connection', (socket) => {
 //ecosystem screen
 let screen = io.of('/screen');
 screen.on('connection', (socket) => {
-  console.log('new screen client!: ' + socket.id);
+  // console.log('new screen client!: ' + socket.id);
 
   socket.on("makeGenny", () => {
     addRandomGenny();
   });
 
+  socket.on("newLube", (data) => {
+    lubeLocations.push(new Lube(D.options.lubeSize, data));
+  });
+
   socket.on("getEcosystem", (socket) => { //when screen resets
-    console.log('sending screen the current gennies');
+    // console.log('sending screen the current gennies');
     for (let genny of gennies) {
       screen.emit("newGenny", genny); //hmm forgot emit rules TODO
     }
-    console.log('test');
+    // console.log('test');
   });
   
   /*
@@ -104,7 +109,7 @@ screen.on('connection', (socket) => {
 
   //listen for this client to disconnect
   socket.on('disconnect', () => {
-    console.log('screen client disconnected: ' + socket.id);
+    // console.log('screen client disconnected: ' + socket.id);
   });
 });
 
@@ -115,17 +120,98 @@ setInterval( () => {
     lubeLocations: [],
   };
 
+  //show all the lube
+  lubeLocations.forEach( (lube) => {
+    updates.lubeLocations.push(lube.display());
+  });
+
+  let mates = [];
+
+
+  //feed and fuck
+  // if(this.critterCount <= 500) { // arbitrary pop threshold for now
+  //     this.checkForMates(mates);
+  // }
+
   let oldGennies = structuredClone(gennies);
   for (let genny of gennies) {
-    genny.frolic(oldGennies, lubeLocations);
+    let [lube, mate] = genny.frolic(oldGennies, lubeLocations);
+    if (lube != undefined) {
+      let lubeIndex = lubeLocations.findIndex( (element) => {
+          return element.id == lube.id
+      });
 
+      lubeLocations.splice(lubeIndex, 1);
+
+      genny.wetness += D.options.lubeSize + genny.lubeEfficiency;
+      // console.log(critter.name + " has eaten: " + snack.id);
+      // let snackQtree = this.qtree.points -- no way to remove? just going to add a property to food
+      // let foodRange = new Circle(critter.position.x, critter.position.y, critter.r + 10);
+      // this.qtree.remove(foodRange, snack, "ID");
+    }
+    //genny mates -- to be resolved in checkForMates() below
+    if (mate != undefined) {
+        mates.push({self: genny, mate: mate});
+        // console.log('ilikeu');
+    } else {
+        genny.mateTimer++;
+    }
   }
+
+  checkForMates(mates);
+
   for (let genny of gennies) {
     updates.gennies.push(genny.display());
   }
 
   screen.emit("update", updates);
 }, 10);
+
+function checkForMates(mates) {
+    //now the mates are triggering in flocking for quadtree usage, but the ecosystem makes babies here
+    //just check for pair matches first
+    let pairs = [];
+    for (let i = mates.length - 1; i >= 0; i--) {
+        for (let j = 0; j < i; j++) { //so won't overlap with same pair again
+            // console.log(JSON.stringify(mates));
+            if (mates[i].self.id == mates[j].mate.id && mates[i].mate.id == mates[j].self.id){ //adding the double check in case throuple...
+                pairs.push({A: mates[i].self, B: mates[j].self});
+            }
+        }
+    }
+    //then make babies from the matched pairs
+    pairs.forEach( (parents) => {
+        //reset mateTimers
+        // parents.A.mateTimer += parents.A.refractoryPeriod;
+        // parents.B.mateTimer += parents.B.refractoryPeriod;
+        parents.A.mateTimer = 0;
+        parents.B.mateTimer = 0;
+        //give to baby from parents
+        let parentLubeA = parents.A.wetness * parents.A.childInheritance;
+        parents.A.wetness -= parentLubeA;
+        let parentLubeB = parents.B.wetness * parents.B.childInheritance;
+        parents.B.wetness -= parentLubeB;
+        let inheritance = parentLubeA + parentLubeB;
+        //make da bebe
+
+        let newBaby = new Genny("baby", {parentA: parents.A, parentB: parents.B, inheritance: inheritance});
+        // console.log("new baby at: " + JSON.stringify(newBaby.position));
+        // console.log(`new baby: ${newBaby.name}`);
+        // parents.A.offspring.push({name: newBaby.name})
+        // parents.B.offspring.push({name: newBaby.name})
+        gennies.push(newBaby);
+        screen.emit("newGenny", newBaby);
+
+        for (let genny of gennies) {
+          if (genny.id == parents.A.id) {
+            genny = parents.A;
+          } else if (genny.id == parents.B.id) {
+            genny = parents.B;
+          }
+        }
+        // addCritterToDB(newBaby);
+    });
+}
 
 
 function addRandomGenny(){
@@ -145,6 +231,6 @@ function addRandomGenny(){
 
   school.push(new Fish(stats));
   */
-  console.log("TODO");
-  console.log('new Genny');
+  // console.log("TODO");
+  // console.log('new Genny');
 }

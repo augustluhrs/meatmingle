@@ -361,6 +361,10 @@ function checkType(){
 }
 
 function randomHex(){ // thanks https://css-tricks.com/snippets/javascript/random-hex-color/
-    var randomColor = Math.floor(Math.random()*16777215).toString(16);
-    return "#" + randomColor;
+  let randomColor = "";
+  while(randomColor.length !== 6) { //errors if 5
+    randomColor = Math.floor(Math.random()*16777215).toString(16);
+  }
+  return "#" + randomColor;
+
 }

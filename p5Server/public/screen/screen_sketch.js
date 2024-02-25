@@ -77,6 +77,7 @@ let updates = {
     gennies: [],
     lubeLocations: []
 };
+let lubeSize = 20;
 // let randomFishButton, clearFishButton;
 // let isBait = false;
 // let baitPos = {x: 0, y: 0};
@@ -144,6 +145,13 @@ function draw(){
     // fill(255);
     // ellipse(0, 0, 300);
 
+    for (let lube of updates.lubeLocations) {
+        push();
+        fill(255);
+        ellipse(lube.pos.x, lube.pos.y, lubeSize);
+        pop();
+    }
+
     for(let gennyData of updates.gennies){
         showGenny(gennyData);
     }
@@ -208,10 +216,10 @@ function showGenny(gennyData){
             } else if (genny.isHorny && genny.isTooDry) {
                 text("🌵👄🌵", facePos.x, facePos.y);
             } else if (!genny.isHorny && !genny.isTooDry) {
-                text("👁️🌫️👁️", facePos.x, facePos.y);
+                text("👁️⛔👁️", facePos.x, facePos.y);
             } else {
                 //hurtin
-                text("🌵🌫️🌵", facePos.x, facePos.y);
+                text("🌵⛔🌵", facePos.x, facePos.y);
             }
             pop();
 
@@ -272,7 +280,7 @@ function showGenny(gennyData){
 
 function mouseClicked(){
     if (mouseY < height){ //to prevent from triggering when clicking fish button
-        // socket.emit('baitToggle');
+        socket.emit('newLube', {x: mouseX, y: mouseY});
     }
 }
 

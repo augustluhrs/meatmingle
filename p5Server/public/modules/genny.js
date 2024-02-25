@@ -2,6 +2,7 @@ const DNA = require("./DNA");
 const Victor = require("victor");
 const lerp = require("lerp");
 const D = require("./defaults");
+const Boid = require("./flocking");
 
 //poem moderation library
 const {
@@ -20,13 +21,13 @@ const censor = new TextCensor();
 class Genny {
   constructor(source, data){
     //new Genny from client or from mating?
-    console.log(source);
+    // console.log(source);
     if (source == "client") {
       this.id = data.id;
       this.poem = data.poem;
       //obscenity censor
       let matches = matcher.getAllMatches(this.poem);
-      console.log("profanity matches: \n", matches);
+      // console.log("profanity matches: \n", matches);
       this.poem = censor.applyTo(this.poem, matches);
       console.log(this.poem);
       // this.colors = data.colors;
@@ -63,12 +64,18 @@ class Genny {
       let poemA = parentA.poem.split(" ");
       let poemB = parentB.poem.split(" ");
 
-      let splitA = Math.floor(Math.random() * poemA.length);
-      let splitB = Math.floor(Math.random() * poemB.length);
+      let splitA = Math.min(Math.max(1, Math.floor(Math.random() * poemA.length)), poemA.length);
+      let splitB = Math.min(Math.max(1,Math.floor(Math.random() * poemB.length)), poemB.length);
+      // console.log(splitA);
+      // console.log(splitB);
 
+      // let stringWithoutCommas = stringWithCommas.replace(/,/g, '');
       let firstHalf = poemA.slice(0, splitA);
+      // console.log(firstHalf);
       let secondHalf = poemB.slice(splitB);
+      // console.log(secondHalf);
       this.poem = [firstHalf, secondHalf].join(" ");
+      this.poem.replace(/,/g, ' ');
 
       //obscenity censor
       let matches = matcher.getAllMatches(this.poem);
@@ -180,8 +187,11 @@ class Genny {
     this.isReadyToMate = false;
     this.isMating = false;
 
-    console.log("server genny:");
-    console.log(this);
+    //at end so flocking has all info
+    this.boid = new Boid(this);
+
+    // console.log("server genny:");
+    // console.log(this);
   }
 
 
@@ -204,7 +214,7 @@ class Genny {
     if (this.mateTimer >= this.refractoryPeriod) {
       this.isHorny = true;
     } else {
-      // this.isReadyToMate = false; //no, should switch off in mate function
+      this.isReadyToMate = false; 
     }
 
     //check if ready to mate
@@ -213,11 +223,13 @@ class Genny {
     } else {
       this.isReadyToMate = false;
     }
+
+    let [velocity, lube, mate] = this.boid.run(this, gennies, lubeLocations);
+
+    return [lube, mate];
   }
 
   display(){
-    
-
     let pos = {x: this.pos.x, y: this.pos.y};
     return {pos: pos, genny: this}; //hmm....
   }

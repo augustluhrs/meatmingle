@@ -4,9 +4,9 @@ const options = {
   minRadius: 50,
   maxRadius: 120,
   minSpeed: 1,
-  maxSpeed: 15,
-  minRefractory: 5000,
-  maxRefractory: 30000,
+  maxSpeed: 7,
+  minRefractory: 500,
+  maxRefractory: 2000,
   minInheritance: 2,
   maxInheritance: 50,
   minLubeToMate: 5, //now making this global so prepared makes more sense
@@ -15,7 +15,7 @@ const options = {
   maxLubeEfficiency: 100,
   maxWetness: 100, //upper range of dryness value
   mutationRate: 0.03,
-  lubeTimer: 1000,
+  lubeTimer: 500,
   lubeSize: 10,
   dryRate: 1000, //how fast everyone dries out
   //no matetimer b/c that comes from refractory?
