@@ -101,6 +101,15 @@ function hexToHSL(hex) { //from chat-GPT
   return [h, s, l]; //normalized
 }
 
+function randomHex(){ // thanks https://css-tricks.com/snippets/javascript/random-hex-color/
+  let randomColor = "";
+  while(randomColor.length !== 6) { //errors if 5
+    randomColor = Math.floor(Math.random()*16777215).toString(16);
+  }
+  return "#" + randomColor;
+
+}
+
 function generateID() { //grabbed from https://gist.github.com/gordonbrander/2230317 -- thanks!
   return '_' + Math.random().toString(36).substr(2, 9);
 }
@@ -112,4 +121,5 @@ module.exports.map = map;
 module.exports.rand_bm = rand_bm;
 module.exports.hexToRGB = hexToRGB;
 module.exports.hexToHSL = hexToHSL;
+module.exports.randomHex = randomHex;
 module.exports.generateID = generateID;

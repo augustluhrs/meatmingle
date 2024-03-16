@@ -97,7 +97,7 @@ function setup(){
     colorPickerHair.hide();
 
     //UI
-    poemInput = createInput("type a line of poetry here (2-16 words)").class("inputs").position(0, 0).size(width - 50, 1.5 * height/10);
+    poemInput = createInput("type a line of poetry here (2-12 words)").class("inputs").position(0, 0).size(width - 50, 1.5 * height/10);
     poemInput.center("horizontal");
     poemInput.elt.addEventListener('focus', function(event) { //thanks chat gpt
       event.target.value = '';

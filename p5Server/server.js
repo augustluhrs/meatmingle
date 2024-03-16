@@ -6,7 +6,7 @@
 */
 
 //create server
-let port = process.env.PORT || 8080;
+let port = process.env.PORT || 8000;
 let express = require('express');
 let app = express();
 let server = require('http').createServer(app).listen(port, function(){
@@ -71,7 +71,7 @@ let screen = io.of('/screen');
 screen.on('connection', (socket) => {
   // console.log('new screen client!: ' + socket.id);
 
-  socket.on("makeGenny", () => {
+  socket.on("makeRandomGenny", () => {
     addRandomGenny();
   });
 
@@ -215,22 +215,39 @@ function checkForMates(mates) {
 
 
 function addRandomGenny(){
-  /*
+  // console.log("new genny from " + socket.id);
+  // console.log(data);
+
   let xAxis = Math.floor(Math.random() * 16);
   let yAxis = Math.floor(Math.random() * 16);
 
-  let stats = {
-    name: "Fish " + school.length,
-    primaryColor: D.randomHex(),
-    secondaryColor: D.randomHex(),
-    strength: yAxis,
-    defense: 16 - yAxis,
-    speed: xAxis,
-    size: 16 - xAxis
+  let data = {
+  id: D.generateID(),
+  poem: randomPoems[Math.floor(Math.random() * randomPoems.length)],
+  body: 0, //on server, looks array [body, zones, hair]
+  zones: 0,
+  hair: 0,
+  colors: [ D.randomHex(), D.randomHex(), D.randomHex() ],
+  prolific: yAxis,
+  prepared: 16 - yAxis,
+  thirsty: xAxis,
+  generous: 16 - xAxis,
+  position: {x: 0, y: 0}, //will get overwritten
   }
 
-  school.push(new Fish(stats));
-  */
-  // console.log("TODO");
-  // console.log('new Genny');
+  let newGenny = new Genny("client", data);
+  gennies.push(newGenny);
+  
+  screen.emit("newGenny", newGenny);
+
+  console.log('new random Genny');
 }
+
+let randomPoems = [
+  "this is a test line of poetry",
+  "forsooth, I dost dingle thou rizz",
+  "red fish blue fish one fish two bitch",
+  "air optix plus hydraglyde for your eyeballs",
+  "yeah idk what this is all about yeah idk what this is all about yeah idk what this is all about",
+  "shit i forgot to take my vitamins"
+]

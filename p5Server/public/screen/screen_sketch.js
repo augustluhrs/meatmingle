@@ -128,6 +128,7 @@ function setup(){
     //UI
     // randomFishButton = createButton("RANDOM FISH").class("buttons").mousePressed(() => {socket.emit("randomFish")});
     // clearFishButton = createButton("CLEAR ALL FISH").class("buttons").mousePressed(() => {socket.emit("clearFish")});
+    randomGennyButton = createButton("RANDOM GENNY").class("buttons").mousePressed(() => {socket.emit("makeRandomGenny")});
 
     //get ecosystem
     socket.emit("getEcosystem");
@@ -140,7 +141,6 @@ function setup(){
 
 function draw(){
     // image(water, 0, 0, windowWidth, windowHeight);
-    // console.log('dfadf')
     background(250, 20, 50);
     // fill(255);
     // ellipse(0, 0, 300);

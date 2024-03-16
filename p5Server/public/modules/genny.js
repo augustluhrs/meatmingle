@@ -17,6 +17,11 @@ const matcher = new RegExpMatcher({
 	...englishRecommendedTransformers,
 });
 const censor = new TextCensor();
+const newStrat = () => "noody";
+censor.setStrategy(newStrat);// not using grawlix because now using regex to elim all punctuation
+
+//thanks chatgpt for teaching me regex finally
+const punctuationRegex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
 
 class Genny {
   constructor(source, data){
@@ -26,10 +31,13 @@ class Genny {
       this.id = data.id;
       this.poem = data.poem;
       //obscenity censor
+      // console.log(this.poem);
       let matches = matcher.getAllMatches(this.poem);
-      // console.log("profanity matches: \n", matches);
+      console.log("profanity matches: \n", matches);
       this.poem = censor.applyTo(this.poem, matches);
       console.log(this.poem);
+      this.poem = this.poem.replace(punctuationRegex, " ");
+
       // this.colors = data.colors;
       //need to convert hex to HSL for lerp later
       this.colors = [
@@ -51,7 +59,7 @@ class Genny {
       this.pos = new Victor(Math.random() * D.ecoWidth, Math.random() * D.ecoHeight);
       this.wetness = D.options.maxWetness;
       this.DNA = new DNA(this);
-    } else {
+    } else {  //new baby
       let parentA = data.parentA;
       let parentB = data.parentB;
       this.pos = new Victor(parentA.pos.x, parentB.pos.y);
@@ -61,21 +69,31 @@ class Genny {
 
       //crossover
       //randomly split poems in two sections and smash together
+      console.log(parentA.poem);
+      console.log(parentB.poem);
+
       let poemA = parentA.poem.split(" ");
       let poemB = parentB.poem.split(" ");
 
-      let splitA = Math.min(Math.max(1, Math.floor(Math.random() * poemA.length)), poemA.length);
-      let splitB = Math.min(Math.max(1,Math.floor(Math.random() * poemB.length)), poemB.length);
-      // console.log(splitA);
-      // console.log(splitB);
+      this.poem = "this line of poetry is far far far far far too long"
+      while (this.poem.split(" ").length >= 12) { //dumb, i know. TODO replace with syllable count
+        let splitA = Math.min(Math.max(1, Math.floor(Math.random() * poemA.length)), poemA.length);
+        let splitB = Math.min(Math.max(1, Math.floor(Math.random() * poemB.length)), poemB.length);
+        console.log(splitA);
+        console.log(splitB);
 
-      // let stringWithoutCommas = stringWithCommas.replace(/,/g, '');
-      let firstHalf = poemA.slice(0, splitA);
-      // console.log(firstHalf);
-      let secondHalf = poemB.slice(splitB);
-      // console.log(secondHalf);
-      this.poem = [firstHalf, secondHalf].join(" ");
-      this.poem.replace(/,/g, ' ');
+        // let stringWithoutCommas = stringWithCommas.replace(/,/g, '');
+        let firstHalf = poemA.slice(0, splitA);
+        console.log(firstHalf);
+        let secondHalf = poemB.slice(splitB);
+        console.log(secondHalf);
+        this.poem = [firstHalf, secondHalf].join(" ");
+        this.poem = this.poem.replace(punctuationRegex, " ");
+        // this.poem.replace(/,/g, ' ');
+
+      }
+      
+   
 
       //obscenity censor
       let matches = matcher.getAllMatches(this.poem);
