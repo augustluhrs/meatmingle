@@ -3,6 +3,8 @@ const Victor = require("victor");
 const lerp = require("lerp");
 const D = require("./defaults");
 const Boid = require("./flocking");
+const Pron = require('pronouncing'); //lol
+
 
 //poem moderation library
 const {
@@ -17,7 +19,7 @@ const matcher = new RegExpMatcher({
 	...englishRecommendedTransformers,
 });
 const censor = new TextCensor();
-const newStrat = () => "noody";
+const newStrat = () => "meat"; //noody
 censor.setStrategy(newStrat);// not using grawlix because now using regex to elim all punctuation
 
 //thanks chatgpt for teaching me regex finally
@@ -36,7 +38,7 @@ class Genny {
       console.log("profanity matches: \n", matches);
       this.poem = censor.applyTo(this.poem, matches);
       console.log(this.poem);
-      this.poem = this.poem.replace(punctuationRegex, " ");
+      this.poem = this.poem.replace(punctuationRegex, "");
 
       // this.colors = data.colors;
       //need to convert hex to HSL for lerp later
@@ -66,6 +68,10 @@ class Genny {
       this.wetness = data.inheritance;
       this.DNA = new DNA()
       this.id = D.generateID();
+
+      console.log("\nnew baby from :")
+      console.log(parentA.id);
+      console.log(parentB.id);
 
       //crossover
       //randomly split poems in two sections and smash together
@@ -210,6 +216,22 @@ class Genny {
 
     // console.log("server genny:");
     // console.log(this);
+
+    //testing syllable count
+    console.log("\n\nsyllable count for: " + this.poem + "\n");
+    let syllables = 0;
+    for (let word of this.poem.split(" ")) {
+      // console.log("num phones per word: " + Pron.phonesForWord(word).length);
+      // console.log("syllables in " + word + ":");
+      // console.log(Pron.syllableCount(Pron.phonesForWord(word)[0]));
+      let phones = Pron.phonesForWord(word);
+      if (phones.length > 0) {
+        syllables += Pron.syllableCount(phones[0]);
+      } else {
+        syllables++; //hmm
+      }
+    }
+    console.log(syllables + "\n");
   }
 
 

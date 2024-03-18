@@ -43,7 +43,10 @@ var io = socket(server, {
   },
 });
 
-//creation client (mobile)
+//
+//  creation client (mobile)
+//
+
 var inputs = io.of('/')
 //listen for anyone connecting to default namespace
 inputs.on('connection', (socket) => {
@@ -66,7 +69,10 @@ inputs.on('connection', (socket) => {
 
 });
 
-//ecosystem screen
+//
+// ecosystem screen
+//
+
 let screen = io.of('/screen');
 screen.on('connection', (socket) => {
   // console.log('new screen client!: ' + socket.id);
@@ -113,7 +119,10 @@ screen.on('connection', (socket) => {
   });
 });
 
+//
 // SERVER LOOP
+//
+
 setInterval( () => {
   let updates = {
     gennies: [],

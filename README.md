@@ -2,8 +2,10 @@
 
 A generative poetry ecosystem where participants create genital critters, "gennies", whose DNA is a line of poetry, and send them off to a poetry play party. When the gennies are lubed up enough and their refractory period is reset, they cruise around until they find another willing genny and ~~redacted~~ until a new little genny pops out whose DNA poem line is a cross of the parents'.
 
-*ITP Stupid Hackathon 2024*
+*ITP Stupid Hackathon 2024* &&
 *WordHack March 2024*
+
+![CLI showing early syllable check on crossover poem lines](documentation/yeahbitch.png)
 
 ## Special Thanks
 
@@ -68,9 +70,9 @@ CC-BY-NC
     - [ ] mutation word list
     - [X] new censor strategy
 - [ ] musical version
-  - [ ] AI text to voice
-  - [ ] syllable/length check when generating lines
-  - [ ] javascript syllable library like Alison's python library?
+  - [X] TTS p5.speech
+  - [ ] pronouncing syllable check
+  - [ ] strudel? or ableton with some sort of sync?
   - [ ] animation to a beat
 - [ ] wand controller
   - [ ] why
@@ -129,3 +131,15 @@ __________________
 - [ ] Tech Check
 - [ ] PERFORM
 
+
+
+- remove DNA
+- rework mate/lube timers and flags
+- add some sort of expiration (either from wetness or a chance after offspring -- might be better to do it that way so that the gennies are guaranteed at least one impact vs roaming around and never mating then dying. could still have it be a wetness thing, since it would make sense and be funny to show them being so dry that they just are a husk that blows away in the wind. the amount of wetness you lose on procreation )
+
+## Intro
+
+- gennies do not have families, they have no platonic relationships.
+- though in our world procreation is often not the byproduct or even goal of sex, for the gennies, their sex always results in a new genny joining the party.
+- (explanation of stats)
+- (showing a genny getting too dry and withering away)

@@ -50,6 +50,10 @@ socket.on('newGenny', (data) => {
 
     // console.log("new gennyLooks", c);
     
+    //testing speech on creation
+    if (isSpeechLoaded) {
+        speech.speak(genny.poem);
+    }
 
 });
 
@@ -81,6 +85,10 @@ let lubeSize = 20;
 // let randomFishButton, clearFishButton;
 // let isBait = false;
 // let baitPos = {x: 0, y: 0};
+
+// p5.speech TTS
+let speech;
+let isSpeechLoaded = false; //silly but w/e, it's legible
 
 //ui/display
 // let aspectRatio = 16/9;
@@ -133,6 +141,14 @@ function setup(){
     //get ecosystem
     socket.emit("getEcosystem");
     // console.log(gennyLooks);
+    
+    //set up p5.speech
+    // speech = new p5.Speech().onLoad(()=>{speech.speak("meat mingle")});
+    speech = new p5.Speech('Microsoft Zira - English (United States)', ()=>{isSpeechLoaded = true;});
+    // speech = new p5.Speech('Google US English', ()=>{console.log('dfdf')});
+    
+    
+    // speech.speak("meat mingle")
 };
 
 //
