@@ -6,7 +6,7 @@ const punctuationRegex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
 
 let beats = 4;
 let bpm = 126;
-let beatInterval = ((beats / (bpm/60)) / beats) * 1000; //right now can't change,
+let beatInterval = ((beats / (bpm/60)) / beats) * 1000 * 2; //right now can't change in script, and going slow for test
 // let poemQ = [];
 
 // function setBeat(_beats, _bpm) {

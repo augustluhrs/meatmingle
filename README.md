@@ -194,3 +194,14 @@ __________________
 
 - vibe brainstorm
   - queue sampler tool (hovers over lines? button to play?)
+
+- performance
+  - quadtree again? or just limit num of gennies / make survival harder?
+  - what's easier, making a bunch of assets, or just giving people a canvas? then can do crossover of drawings too, which would be soooo satisfying... whole new layer... might even solve the tint issue since it might be easier to draw the lines than tint the images. though going to depend on how i end up tracking the lines... can i store points and just make lines? those should be less expensive than ellipse right?
+  - or... do i dare... learn shaders...
+
+- meat mingle title with bubble letters
+
+- test on glitch to make sure everything works
+
+- speech queue needs to be based on the gennies that exist, not just arbitrary repetition, esp. once gennies are gone. maybe locking the poems on the line box protects the genny from drying out? can highlight with good aura -- that way it also promotes the poem heading in a certain direction since they have a higher likelihood to reproduce (unless the wetness lost scales by number of offspring) (can't just give them infinite wetness b/c might go nuclear)

@@ -12,6 +12,10 @@ socket.on('connect', () => {
     console.log('now connected to server');
 });
 
+socket.on('changeSettings', (data)=>{
+    beatInterval = data.beatInterval;
+});
+
 socket.on('newGenny', (data) => {  
     console.log("new genny on screen: " + data.id);
     //image tint performance hack
@@ -105,6 +109,7 @@ let speech;
 let isSpeechLoaded = false; //silly but w/e, it's legible
 let beatInterval = 0;
 let prevTime = 0;
+let beat = 0;
 let poemQ = []; //stores the lines to be read on beat, {id, beats}, recycles last two
 
 //ui/display
@@ -116,6 +121,9 @@ let images = {
     hair: []
 }
 let bgHue = 0;
+
+//buttons
+let randomGennyButton, pauseButton, resumeButton;
 
 function preload(){
     // font = loadFont("../assets/fonts/fugaz.ttf");
@@ -155,16 +163,25 @@ function setup(){
     // randomFishButton = createButton("RANDOM FISH").class("buttons").mousePressed(() => {socket.emit("randomFish")});
     // clearFishButton = createButton("CLEAR ALL FISH").class("buttons").mousePressed(() => {socket.emit("clearFish")});
     randomGennyButton = createButton("RANDOM GENNY").class("buttons").mousePressed(() => {socket.emit("makeRandomGenny")});
+    pauseButton = createButton("pause").class("buttons").mousePressed(() => {
+        socket.emit("pause");
+        speech.pause();
+    });
+    resumeButton = createButton("resume").class("buttons").mousePressed(() => {
+        socket.emit("resume");
+        speech.resume();
+    });
+
 
     //get ecosystem
     socket.emit("getEcosystem");
     // console.log(gennyLooks);
     
     //set up p5.speech
-    // speech = new p5.Speech().onLoad(()=>{speech.speak("meat mingle")});
     speech = new p5.Speech('Microsoft Zira - English (United States)', ()=>{isSpeechLoaded = true;});
-    // speech = new p5.Speech('Google US English', ()=>{console.log('dfdf')});
-    speech.interrupt = true;
+    speech.interrupt = true; //hmm bugging out
+    speech.setPitch(0.3); //low
+    speech.setRate(1.5); //fast
     
     // speech.speak("meat mingle")
 };
@@ -176,7 +193,7 @@ function setup(){
 function draw(){
     // image(water, 0, 0, windowWidth, windowHeight);
     // background(250, 20, 50);
-    background(bgHue, 20, 50);
+    background(bgHue, 50, 80);
     // fill(255);
     // ellipse(0, 0, 300);
 
@@ -191,6 +208,7 @@ function draw(){
         showGenny(gennyData);
     }
     
+    // speech.speak("meat meat meat meat");
 
     // testVoiceLoop();
     if (isSpeechLoaded && poemQ.length > 0) {
@@ -334,19 +352,30 @@ function beatLoop() { //auto from poemQ
     let currentTime = millis();
     if (currentTime - prevTime >= beatInterval) { //hmm will this actually be on beat or will it depend on loop/browswer?
         prevTime = currentTime;
+        beat++;
+
+        // console.log(poemQ);
         if (poemQ.length < 2) {
             //will only happen once per bar since by definition adding will increase length
             poemQ.push(poemQ[0].slice());
         }
 
         speech.speak(poemQ[0][0]);
+        // speech.speak("meat");
 
         poemQ[0].splice(0, 1); //remove the beat that was just spoken
         if (poemQ[0].length < 1) {
             poemQ.splice(0, 1); //remove line after last beat is spoken
         } 
 
-        bgHue += 360/8;
+        if (beat == 4) {
+            //new bar
+            // prevBar = prevTime;
+            beat = 1;
+            bgHue += 360/8;
+        }
+
+        // console.log(`currentTime: ${currentTime}, prevTime: ${prevTime})`;
     }
 }
 
@@ -356,7 +385,7 @@ function testVoiceLoop(){
     let currentTime = millis();
     if (currentTime - prevTime >= interval) {
         prevTime = currentTime;
-        // speech.speak("meat meat meat meat")
+        speech.speak("meat meat meat meat")
     }        
 }
 
