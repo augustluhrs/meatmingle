@@ -53,9 +53,22 @@ socket.on('newGenny', (data) => {
     
     //testing speech on creation
     if (isSpeechLoaded) {
-        speech.speak(genny.poem);
+        // speech.speak(genny.poem);
     }
 
+    //add poem beats to queue 
+    poemQ.push(genny.beats);
+
+    // let noRepeats = true; //not sure if I need this, but safe?
+    // for (let line of poemQ) {
+    //     if (line.id == genny.id) {
+    //         noRepeats = false;
+    //         continue; //hmm
+    //     }
+    // }
+    // if (noRepeats) {
+        // poemQ.push({id: genny.id, beats: genny.beats});
+    // }
 });
 
 socket.on('update', (data) => {
@@ -90,6 +103,9 @@ let lubeSize = 20;
 // p5.speech TTS
 let speech;
 let isSpeechLoaded = false; //silly but w/e, it's legible
+let beatInterval = 0;
+let prevTime = 0;
+let poemQ = []; //stores the lines to be read on beat, {id, beats}, recycles last two
 
 //ui/display
 // let aspectRatio = 16/9;
@@ -99,6 +115,7 @@ let images = {
     zones: [],
     hair: []
 }
+let bgHue = 0;
 
 function preload(){
     // font = loadFont("../assets/fonts/fugaz.ttf");
@@ -147,7 +164,7 @@ function setup(){
     // speech = new p5.Speech().onLoad(()=>{speech.speak("meat mingle")});
     speech = new p5.Speech('Microsoft Zira - English (United States)', ()=>{isSpeechLoaded = true;});
     // speech = new p5.Speech('Google US English', ()=>{console.log('dfdf')});
-    
+    speech.interrupt = true;
     
     // speech.speak("meat mingle")
 };
@@ -158,7 +175,8 @@ function setup(){
 
 function draw(){
     // image(water, 0, 0, windowWidth, windowHeight);
-    background(250, 20, 50);
+    // background(250, 20, 50);
+    background(bgHue, 20, 50);
     // fill(255);
     // ellipse(0, 0, 300);
 
@@ -174,10 +192,10 @@ function draw(){
     }
     
 
-    // if (isBait){
-    //     image(bait, baitPos.x, baitPos.y, 60, 90);
-    //     socket.emit("baitPos", {x: mouseX, y: mouseY});
-    // }
+    // testVoiceLoop();
+    if (isSpeechLoaded && poemQ.length > 0) {
+        beatLoop();
+    }
 }
 
 function showGenny(gennyData){
@@ -311,3 +329,49 @@ function mouseClicked(){
 
 //     return pg;
 // }
+
+function beatLoop() { //auto from poemQ
+    let currentTime = millis();
+    if (currentTime - prevTime >= beatInterval) { //hmm will this actually be on beat or will it depend on loop/browswer?
+        prevTime = currentTime;
+        if (poemQ.length < 2) {
+            //will only happen once per bar since by definition adding will increase length
+            poemQ.push(poemQ[0].slice());
+        }
+
+        speech.speak(poemQ[0][0]);
+
+        poemQ[0].splice(0, 1); //remove the beat that was just spoken
+        if (poemQ[0].length < 1) {
+            poemQ.splice(0, 1); //remove line after last beat is spoken
+        } 
+
+        bgHue += 360/8;
+    }
+}
+
+// let prevTime = 0;
+let interval = 1905; //126 bpm (MAMI) = 2.1 per second, so each 4 beat bar is ~1905ms
+function testVoiceLoop(){
+    let currentTime = millis();
+    if (currentTime - prevTime >= interval) {
+        prevTime = currentTime;
+        // speech.speak("meat meat meat meat")
+    }        
+}
+
+
+
+//splitting string into 4 equal parts and starting each on the beat
+/*
+let beats = 4;
+let bpm = 126;
+let beatInterval = 0;
+let poemQ = []; //poem queue
+function setBeat(beats, bpm) {
+    beatInterval = ((beats / (bpm/60)) / beats) * 1000;
+}
+// function beatBar(poem) {
+*/
+
+

@@ -82,6 +82,9 @@ CC-BY-NC
     - [ ] porn hub opening
     - [ ] careless whisper sax
     - [ ] 50 shades of grey weeknd chord
+    - [ ] 808 loops
+    - [ ] synth bass loops
+    - [ ] nasty filter
 - [ ] wand controller
   - [ ] why
 - [ ] backup plans
@@ -145,6 +148,7 @@ __________________
 
 ## Intro
 
+- CW: sex, procreation, poetry
 - gennies do not have families, they have no platonic relationships.
 - though in our world procreation is often not the byproduct or even goal of sex, for the gennies, their sex always results in a new genny joining the party.
 - (explanation of stats)
@@ -160,7 +164,7 @@ __________________
 
 ### Monday Marathon Pomodoros
 
-- DNA rework
+- ~~DNA rework~~
 - mating restrictions
 - timer check and rework
 
@@ -168,14 +172,17 @@ __________________
 - screen size
 - mobile size
 - highlight genny when poem is speaking
+- visual of beat (bg color change? movement of gennies?)
 
 - genny assets
 - genny death animation
 - genny mate animations
 - genny movement adjustments (separation and speed)
 
-- try interval timing of speak()
+- ~~try interval timing of speak()~~
+- ~~split poem into 4 beat sections~~
 - check strudel timing options
+- click poem line in queue to interrupt and play
 
 - control UI page
 - sliders for mutation, flocking, timers
@@ -184,3 +191,6 @@ __________________
   - kill one
   - set all wetness / refractory to ready
 - hover on screen to show poem, timers
+
+- vibe brainstorm
+  - queue sampler tool (hovers over lines? button to play?)

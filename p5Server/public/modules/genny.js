@@ -4,6 +4,7 @@ const lerp = require("lerp");
 const D = require("./defaults");
 const Boid = require("./flocking");
 const Pron = require('pronouncing'); //lol
+const Beats = require("./beats");
 
 
 //poem moderation library
@@ -254,6 +255,9 @@ class Genny {
       }
     }
     console.log(syllables + "\n");
+
+    // split poem into four beats per bar
+    this.beats = Beats.splitPoemForBar(this.poem);
   }
 
 

@@ -32,6 +32,9 @@ let lubeLocations = [];
 //   lubeLocations: [],
 // };
 
+//beats/speech
+const Beats = require("./public/modules/beats");
+
 // structured clone for node 16
 const structuredClone = require('realistic-structured-clone');
 
@@ -90,6 +93,8 @@ screen.on('connection', (socket) => {
     for (let genny of gennies) {
       screen.emit("newGenny", genny); //hmm forgot emit rules TODO
     }
+
+    screen.emit("changeSettings", {beatInterval: Beats.beatInterval});
     // console.log('test');
   });
   
@@ -211,13 +216,13 @@ function checkForMates(mates) {
         gennies.push(newBaby);
         screen.emit("newGenny", newBaby);
 
-        for (let genny of gennies) {
-          if (genny.id == parents.A.id) {
-            genny = parents.A;
-          } else if (genny.id == parents.B.id) {
-            genny = parents.B;
-          }
-        }
+        // for (let genny of gennies) {
+        //   if (genny.id == parents.A.id) {
+        //     genny = parents.A;
+        //   } else if (genny.id == parents.B.id) {
+        //     genny = parents.B;
+        //   }
+        // }
         // addCritterToDB(newBaby);
     });
 }
@@ -261,5 +266,6 @@ let randomPoems = [
   "shit i forgot to take my vitamins",
   "wonderville is wonderful",
   "august why are you like this",
-  "sometimes Todd, sometimes"
+  "sometimes Todd, sometimes",
+  "lick that ice cream off the cone"
 ]
