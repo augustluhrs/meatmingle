@@ -14,7 +14,7 @@ const options = {
   minLubeEfficiency: 1,
   maxLubeEfficiency: 100,
   maxWetness: 100, //upper range of dryness value
-  mutationRate: 0.03,
+  mutationRate: 0.3,
   lubeTimer: 500,
   lubeSize: 10,
   dryRate: 1000, //how fast everyone dries out

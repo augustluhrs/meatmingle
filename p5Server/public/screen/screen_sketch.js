@@ -44,7 +44,8 @@ socket.on('newGenny', (data) => {
 
     c.tint(gennyColors[2][0], gennyColors[2][1], gennyColors[2][2]);
     c.image(images.body[genny.looks[2]], c.width/2, c.height/2, genny.radius, genny.radius);
-*/
+    */
+   
     // gennyLooks.push({id: genny.id, c: c, colors: gennyColors});
     gennyLooks.push({id: genny.id, colors: gennyColors});
 

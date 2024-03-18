@@ -1,4 +1,4 @@
-const DNA = require("./DNA");
+// const DNA = require("./DNA");
 const Victor = require("victor");
 const lerp = require("lerp");
 const D = require("./defaults");
@@ -32,6 +32,7 @@ class Genny {
     if (source == "client") {
       this.id = data.id;
       this.poem = data.poem;
+
       //obscenity censor
       // console.log(this.poem);
       let matches = matcher.getAllMatches(this.poem);
@@ -60,14 +61,26 @@ class Genny {
       this.radius = D.map(data.generous, 0, 16, 0, 1);
       this.pos = new Victor(Math.random() * D.ecoWidth, Math.random() * D.ecoHeight);
       this.wetness = D.options.maxWetness;
-      this.DNA = new DNA(this);
+      // this.DNA = new DNA(this);
+      this.genes = [
+        this.poem,
+        this.colors,
+        this.radius,
+        this.maxSpeed,
+        this.refractoryPeriod,
+        this.childInheritance,
+        this.minLubeToMate
+      ];
     } else {  //new baby
+      this.id = D.generateID();
+
       let parentA = data.parentA;
       let parentB = data.parentB;
       this.pos = new Victor(parentA.pos.x, parentB.pos.y);
       this.wetness = data.inheritance;
-      this.DNA = new DNA()
-      this.id = D.generateID();
+      // this.DNA = new DNA()
+      this.genes = []; //don't need to fill with dummy data?
+
 
       console.log("\nnew baby from :")
       console.log(parentA.id);
@@ -106,7 +119,7 @@ class Genny {
       this.poem = censor.applyTo(this.poem, matches);
       console.log(this.poem);
 
-      this.DNA.genes[0] = this.poem;
+      this.genes[0] = this.poem;
 
       //TODO length max
 
@@ -125,8 +138,8 @@ class Genny {
 
       //lerp between parent colors to get child colors
       let hueLerp;
-      let colorsA = parentA.DNA.genes[1];
-      let colorsB = parentB.DNA.genes[1];
+      let colorsA = parentA.genes[1];
+      let colorsB = parentB.genes[1];
 
       for (let i = 0; i < 3; i++) {
         //fixing issue where lerping between black/white (low sat) has weird hue
@@ -150,8 +163,8 @@ class Genny {
         } else {
             hueLerp = lerp(colorsA[i][0], colorsB[i][0], D.rand_bm(0, 1))
         }
-
-        this.DNA.genes[1][i] = [ //lerping hue normally unless would need to cross over 0, sat and light lerping normally
+        this.genes[1] = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]; //dummy colors
+        this.genes[1][i] = [ //lerping hue normally unless would need to cross over 0, sat and light lerping normally
             hueLerp,
             lerp(colorsA[i][1], colorsB[i][1], D.rand_bm(0, 1)),
             lerp(colorsA[i][2], colorsB[i][2], D.rand_bm(0, 1))
@@ -159,31 +172,40 @@ class Genny {
       }
 
       //for all genes but color, normal lerp, with box-mueller random function
-      for (let i = 2; i < this.DNA.genes.length; i++) { 
-          this.DNA.genes[i] = lerp(parentA.DNA.genes[i], parentB.DNA.genes[i], D.rand_bm(0, 1));
+      // for (let i = 2; i < this.genes.length; i++) { 
+      for (let i = 2; i < 7; i++) { //now hardcoding because not starting with dummy genes array
+          this.genes[i] = lerp(parentA.genes[i], parentB.genes[i], D.rand_bm(0, 1));
       }
 
       //mutation
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 7; i++) {
         if (Math.random() < D.options.mutationRate) {
-          // console.log(`MUTATION: ${i}`);
+          console.log(`MUTATION: ${i}`);
           //poem mutation TODO
           if (i == 0) {
-            //randomly change characters? or replace words with sex words?    
+            //replace a random word in poem with sex word from mutation pool
+            console.log("poem mutation!")
+            console.log(this.poem);
+            let poemArr = this.poem.split(" ");
+            let wordIndex = Math.floor(Math.random() * poemArr.length);
+            poemArr.splice(wordIndex, 1, mutationWords[Math.floor(Math.random() * mutationWords.length)]);
+            this.poem = poemArr.join(" ");
+            this.poem = this.poem.replace(punctuationRegex, " ");
+            console.log(this.poem);
           }
           //color mutation
           else if (i == 1) {
             for (let i = 0; i < 3; i++){
               let randColor = [Math.random(), Math.random(), Math.random()];
-              this.DNA.genes[1][i] = [ //having to lerp each color individually -- reduced mutation max to 1/4 in any color direction so not too crazy
-                  lerp(this.DNA.genes[1][i][0], randColor[0], Math.random() * 0.25),
-                  lerp(this.DNA.genes[1][i][1], randColor[1], Math.random() * 0.25),
-                  lerp(this.DNA.genes[1][i][2], randColor[2], Math.random() * 0.25)
+              this.genes[1][i] = [ //having to lerp each color individually -- reduced mutation max to 1/4 in any color direction so not too crazy
+                  lerp(this.genes[1][i][0], randColor[0], Math.random() * 0.25),
+                  lerp(this.genes[1][i][1], randColor[1], Math.random() * 0.25),
+                  lerp(this.genes[1][i][2], randColor[2], Math.random() * 0.25)
               ];
             }
           } else {
-              this.DNA.genes[i] += D.rand_bm(-1,1);; 
-              this.DNA.genes[i] = Math.min(Math.max(this.DNA.genes[i], 0), 1); //DIY constrain
+              this.genes[i] += D.rand_bm(-1,1);; 
+              this.genes[i] = Math.min(Math.max(this.genes[i], 0), 1); //DIY constrain
           }
         }
       }
@@ -192,13 +214,13 @@ class Genny {
     
     //take DNA and map from normalized to min max range
     //this is messy, TODO
-    this.colors = this.DNA.genes[1];
-    this.radius = D.map(this.DNA.genes[2], 0, 1, D.options.minRadius, D.options.maxRadius);
-    this.maxSpeed = D.map(this.DNA.genes[3], 0, 1, D.options.minSpeed, D.options.maxSpeed);
-    this.refractoryPeriod = D.map(this.DNA.genes[4], 0, 1, D.options.minRefractory, D.options.maxRefractory);
-    this.childInheritance = D.map(this.DNA.genes[5], 0, 1, D.options.minInheritance, D.options.maxInheritance);
-    this.lubeEfficiency = D.map(this.DNA.genes[6], 0, 1, D.options.minLubeEfficiency, D.options.maxLubeEfficiency)
-    // this.minLubeToMate = D.map(this.DNA.genes[6], 0, 1, D.options.minLubeToMate, D.options.maxLubeToMate);
+    this.colors = this.genes[1];
+    this.radius = D.map(this.genes[2], 0, 1, D.options.minRadius, D.options.maxRadius);
+    this.maxSpeed = D.map(this.genes[3], 0, 1, D.options.minSpeed, D.options.maxSpeed);
+    this.refractoryPeriod = D.map(this.genes[4], 0, 1, D.options.minRefractory, D.options.maxRefractory);
+    this.childInheritance = D.map(this.genes[5], 0, 1, D.options.minInheritance, D.options.maxInheritance);
+    this.lubeEfficiency = D.map(this.genes[6], 0, 1, D.options.minLubeEfficiency, D.options.maxLubeEfficiency)
+    // this.minLubeToMate = D.map(this.genes[6], 0, 1, D.options.minLubeToMate, D.options.maxLubeToMate);
 
     this.direction = 0;
     //timers
@@ -274,5 +296,29 @@ class Genny {
     return {pos: pos, genny: this}; //hmm....
   }
 }
+
+//mutation word pool
+let mutationWords = [
+  "meat",
+  "mingle",
+  "noody",
+  "moist",
+  "bounce",
+  "poem",
+  "hard",
+  "wet",
+  "slut",
+  "daddy",
+  "mommy",
+  "hole",
+  "top",
+  "bottom",
+  // "vers",
+  "switch",
+  "naked",
+  "thirsty",
+  "lube",
+  "condom"
+]
 
 module.exports = Genny;
