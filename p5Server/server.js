@@ -17,16 +17,19 @@ let server = require('http').createServer(app).listen(port, function(){
 app.use(express.static('public'));
 
 //nedb database stuff
-const Datastore = require('nedb');
-let backupDB = new Datastore({filename: "databases/backup.db", autoload: true});
-let ecosystemDB = new Datastore({filename: "databases/ecosystem.db", autoload: true});
+// const Datastore = require('nedb');
+// let backupDB = new Datastore({filename: "databases/backup.db", autoload: true});
+// let ecosystemDB = new Datastore({filename: "databases/ecosystem.db", autoload: true});
 
 //ecosystem variables
 const D = require("./public/modules/defaults");
 const Genny = require("./public/modules/genny");
 const Lube = require("./public/modules/lube");
+const Husk = require("./public/modules/husk");
+
 let gennies = [];
 let lubeLocations = [];
+let husks = [];
 // let updates = {
 //   gennies: [],
 //   lubeLocations: [],
@@ -132,6 +135,8 @@ setInterval( () => {
   let updates = { //this seems like a bad thing to do
     gennies: [],
     lubeLocations: [],
+    husks: [],
+    newHusks: [], //just so screen can pop from queue on first sign of death
   };
 
   //show all the lube
@@ -139,30 +144,25 @@ setInterval( () => {
     updates.lubeLocations.push(lube.display());
   });
 
-  let mates = [];
-
 
   //feed and fuck
+  let mates = [];
   // if(this.critterCount <= 500) { // arbitrary pop threshold for now
   //     this.checkForMates(mates);
   // }
-
   let oldGennies = structuredClone(gennies);
   for (let genny of gennies) {
     let [lube, mate] = genny.frolic(oldGennies, lubeLocations);
+
     if (lube != undefined) {
       let lubeIndex = lubeLocations.findIndex( (element) => {
           return element.id == lube.id
       });
 
       lubeLocations.splice(lubeIndex, 1);
-
-      genny.wetness += D.options.lubeSize + genny.lubeEfficiency;
-      // console.log(critter.name + " has eaten: " + snack.id);
-      // let snackQtree = this.qtree.points -- no way to remove? just going to add a property to food
-      // let foodRange = new Circle(critter.position.x, critter.position.y, critter.r + 10);
-      // this.qtree.remove(foodRange, snack, "ID");
+      genny.wetness += D.options.lubeSize + genny.lubeEfficiency; //prepared gennies make more use of the lube they find...
     }
+
     //genny mates -- to be resolved in checkForMates() below
     if (mate != undefined) {
         mates.push({self: genny, mate: mate});
@@ -174,13 +174,36 @@ setInterval( () => {
 
   checkForMates(mates);
 
-  for (let genny of gennies) {
-    updates.gennies.push(genny.display());
+  for (let i = gennies.length - 1; i >= 0; i--){
+    let g = gennies[i];
+    //check for gennies that have dried out
+    if (g.isHusk) {
+      //remove from gennies array and add to husks
+      updates.newHusks.push(g.id); //going to run into issues with reference?
+      husks.push(new Husk(g));
+      // updates.husks
+      gennies.splice(i, 1);
+    } else {
+      //otherwise, add to updates
+      updates.gennies.push(g.display());
+    }
   }
+
+  //check for husks done drying out
+  for (let i = husks.length - 1; i >= 0; i--) {
+    let h = husks[i];
+    if (h.doneDrying()) {
+      husks.splice(i, 1);
+    } else {
+      updates.husks.push(h.display());
+    }
+  }
+  
 
   screen.emit("update", updates);
 }, 10);
 
+let numGennies, lubeFactor; //trying to reuse more variables to avoid performance hits
 function checkForMates(mates) {
     //just check for pair matches first
     let pairs = [];
@@ -195,16 +218,27 @@ function checkForMates(mates) {
     //then make babies from the matched pairs
     pairs.forEach( (parents) => {
         //reset mateTimers
-        // parents.A.mateTimer += parents.A.refractoryPeriod;
-        // parents.B.mateTimer += parents.B.refractoryPeriod;
         parents.A.mateTimer = 0;
         parents.B.mateTimer = 0;
-        //give to baby from parents
-        let parentLubeA = parents.A.wetness * parents.A.childInheritance;
-        parents.A.wetness -= parentLubeA;
-        let parentLubeB = parents.B.wetness * parents.B.childInheritance;
-        parents.B.wetness -= parentLubeB;
+
+        //check for lube factor --> population control scaling (normal amount at 8 gennies)
+        lubeFactor = 1; 
+        numGennies = gennies.length;
+        if (numGennies < 8) {
+          lubeFactor = D.map(numGennies, 2, 7, 0.1, 0.8);
+        } else if (numGennies > 24) {
+          lubeFactor = D.options.maxWetness; //should kill most anything
+        } else if (numGennies > 8) {
+          lubeFactor = D.map(numGennies, 9, 24, 1.1, 8);
+        }
+        //give wetness to baby from parents (ew >.<)
+        console.log(`lube factor: ${lubeFactor}, parents.A.wetness: ${parents.A.wetness}, parents.B.wetness: ${parents.B.wetness}`)
+        let parentLubeA = Math.max(parents.A.wetness, 1) * parents.A.childInheritance; //prevents from negative wetness being passed on
+        parents.A.wetness -= parentLubeA * lubeFactor; 
+        let parentLubeB = Math.max(parents.B.wetness, 1) * parents.B.childInheritance;
+        parents.B.wetness -= parentLubeB * lubeFactor;
         let inheritance = parentLubeA + parentLubeB;
+        console.log(`lube factor: ${lubeFactor}, parentLubeA: ${parentLubeA}, parentLubeB: ${parentLubeB}, inheritance: ${inheritance}`)
         //make da bebe
 
         let newBaby = new Genny("baby", {parentA: parents.A, parentB: parents.B, inheritance: inheritance});
@@ -214,6 +248,16 @@ function checkForMates(mates) {
         // parents.B.offspring.push({name: newBaby.name})
         gennies.push(newBaby);
         screen.emit("newGenny", newBaby);
+
+        //check for drying out (dying) when left with negative wetness, turns into husk
+        if (parents.A.wetness <= 0) {
+          // parents.A.dryOut();
+          parents.A.isHusk = true;
+        }
+        if (parents.B.wetness <= 0) {
+          parents.B.isHusk = true;
+        }
+
 
         // for (let genny of gennies) {
         //   if (genny.id == parents.A.id) {
@@ -226,6 +270,11 @@ function checkForMates(mates) {
     });
 }
 
+function dryOut(dryGenny) {
+  // when mates are left with negative wetness, turns into husk
+
+
+}
 
 function addRandomGenny(){
   // console.log("new genny from " + socket.id);
@@ -253,7 +302,7 @@ function addRandomGenny(){
   
   screen.emit("newGenny", newGenny);
 
-  console.log('new random Genny');
+  // console.log('new random Genny');
 }
 
 let randomPoems = [

@@ -7,7 +7,7 @@ A generative poetry ecosystem where participants create genital critters, "genni
 *ITP Stupid Hackathon 2024* &&
 *WordHack March 2024*
 
-![CLI showing early syllable check on crossover poem lines](documentation/yeahbitch.png)
+![screengrab of prototype karaoke queue](documentation/sometimespoem.png)
 
 ## Special Thanks
 
@@ -25,6 +25,8 @@ A generative poetry ecosystem where participants create genital critters, "genni
 - Brent Bailey
 - James Hosken
 - John Bezark
+
+![CLI showing early syllable check on crossover poem lines](documentation/yeahbitch.png)
 
 ## Credits
 
@@ -238,10 +240,12 @@ __________________
   - have karaoke queue
   - fix beat distro
   - click blocks to show options (or just have options always there?)
-    - move up
+    - move up (or arrow key)
     - move down
     - kill
     - protect
+    - lube
+    - lube all
   - current block will highlight its genny
 - later
   - check tone loop / beat
@@ -251,6 +255,7 @@ __________________
   - new background
   - new genny assets
   - genny asset on mobile
+  - emojis for lube
   - test optimization
   - check middleware for protecting server
 - stretch
@@ -262,3 +267,4 @@ __________________
     - motor
       - would be fun to have it vibrate
   - test the bulkiness of using the breadboard
+  - switch to RiTa.js so can analyze mutated word and replace with word that is the same type

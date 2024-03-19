@@ -4,9 +4,6 @@
 const Victor = require("victor");
 const Genny = require("./genny");
 const D = require("./defaults");
-// const { Circle } = require("./quadtree");
-// var d = new D(); //i've gotta be doing something wrong...
-// const debug = require('debug')('boid');
 
 //just for calculating the flocking forces, actual pos is outside
 class Boid {
@@ -37,13 +34,15 @@ class Boid {
         let surroundings = this.lookAround(self, gennies, lubeLocations);
         this.flock(surroundings.neighbors);
         // if (gennies.length > 1) {this.flock(surroundings.neighbors)}; //fixing weird bug with one genny getting stuck on edge
-        let snack = this.graze(surroundings.lubeAround);
+        let snack; //lube
+        if (self.wetness < D.options.maxWetness * 0.8) {snack = this.graze(surroundings.lubeAround)}; //doesn't seek lube unless it needs it
         let mate = this.cruise(self, surroundings.neighbors); //findMate() -- needs self for mating info
         // console.log("snack: " + snack)
         this.bounds();
         this.update();
         this.pos.add(this.velocity); //forgot i need to update this pos too
-        return [this.velocity, snack, mate];
+        // return [this.velocity, snack, mate];
+        return [snack, mate];
     }
 
     // lookAround (self, qtree) {

@@ -61,25 +61,35 @@ socket.on('newGenny', (data) => {
     }
 
     //add poem beats to queue 
-    poemQ.push(genny.beats);
+    poemQ.push({id: genny.id, beats: genny.beats, isActive: false});
     addPoemBlock(genny.poem, genny.id);
 
 });
 
 socket.on('update', (data) => {
     updates = data;
-});
 
-/*
-socket.on('baitToggle', (data) => {
-    isBait = data;
-});
+    //if any gennies have dried out, remove their poem from the queue
+    if (data.newHusks.length > 0) {
+        for (let newHuskID of data.newHusks) {
+            //remove from beat Queue
+            for (let i = poemQ.length - 1; i >= 0; i--) {
+                let p = poemQ[i];
+                if (p.id == newHuskID && !p.isActive) { //prevents beat from getting off if current line is from husk
+                    poemQ.splice(i, 1);
+                }
+            }
+            // remove from karaoke panel
+            // for (let i = )
+            //not sure if this will bug out if removed while dragging block TODO test
+            let huskBlocks = document.getElementsByClassName(newHuskID);
+            huskBlocks.forEach( (hb)=>{
+                hb.remove();
+            });
 
-socket.on('baitPos', (data) => { //data is a Victor
-    baitPos.x = data.x;
-    baitPos.y = data.y;
+        }
+    }
 });
-*/
 
 //
 // SETUP AND VARIABLES
@@ -91,9 +101,6 @@ let updates = {
     lubeLocations: []
 };
 let lubeSize = 20;
-// let randomFishButton, clearFishButton;
-// let isBait = false;
-// let baitPos = {x: 0, y: 0};
 
 // p5.speech TTS
 let speech;
@@ -105,7 +112,6 @@ let isPaused = false;
 let poemQ = []; //stores the lines to be read on beat, {id, beats}, recycles last two
 
 //ui/display
-// let aspectRatio = 16/9;
 let font;
 let canvas;
 let images = {
@@ -127,7 +133,6 @@ function preload(){
     // font = loadFont("../assets/fonts/fugaz.ttf");
     images.body.push(loadImage("../assets/body/blob1.png"));
     images.hair.push(loadImage("../assets/hair/longHair.png"));
-    console.log("done loading assets");
 }
 
 function setup(){
@@ -136,7 +141,7 @@ function setup(){
     canvas.parent("page");
     panel = createDiv().id("panel").parent("page");
     
-    poemBlocks.push(createDiv("test line of poetry").class(`poemBlock ${testID}`).parent("panel"));
+    // poemBlocks.push(createDiv("test line of poetry").class(`poemBlock ${testID}`).parent("panel"));
 
     // createCanvas(1920, 1080);
     // let canvasWidth = min(windowWidth, windowHeight * aspectRatio);
@@ -148,7 +153,7 @@ function setup(){
     rectMode(CENTER);
     imageMode(CENTER);
     angleMode(RADIANS);
-    colorMode(HSL);
+    colorMode(HSL, 360, 100, 100, 1);
     // textFont(font);
     textAlign(CENTER, CENTER);
     noStroke();
@@ -204,12 +209,26 @@ function draw(){
     // fill(255);
     // ellipse(0, 0, 300);
 
-    for (let lube of updates.lubeLocations) {
+    //show dried out husks
+    for (let husk of updates.husks) {
         push();
-        fill(255);
-        ellipse(lube.pos.x, lube.pos.y, lubeSize);
+        translate(husk.pos.x, husk.pos.y);
+        textSize(husk.radius/3);
+        fill(200, 5, 50, husk.fade);
+        ellipse(0, 0, husk.radius);
+        // text("❌〰️❌", 0, 0);
+        text("➰〰️➰", 0, 0);
         pop();
     }
+
+    push();
+    textSize(30);
+    for (let lube of updates.lubeLocations) {
+        // fill(255);
+        // ellipse(lube.pos.x, lube.pos.y, lubeSize);
+        text(lube.emoji, lube.pos.x, lube.pos.y);
+    }
+    pop();
 
     for(let gennyData of updates.gennies){
         showGenny(gennyData);
@@ -270,7 +289,7 @@ function showGenny(gennyData){
             // stroke(0);
             textSize(genny.radius/3);
             // let facePos = {x: genny.pos.x, y: genny.pos.y};
-            let facePos = {x: 0, y: 0};
+            let facePos = {x: 0, y: 0}; //????
             if (genny.isReadyToMate) {
                 text("👁️👄👁️", facePos.x, facePos.y);
             } else if (genny.isHorny && genny.isTooDry) {
@@ -362,16 +381,22 @@ function beatLoop() { //auto from poemQ
         beat++;
 
         // console.log(poemQ);
-        if (poemQ.length < 2) {
+        // if (poemQ.length < 2) {
             //will only happen once per bar since by definition adding will increase length
-            poemQ.push(poemQ[0].slice());
+            // poemQ.push(poemQ[0].slice());
+        // }
+
+        //now adding the line to end of queue no matter what, since will get removed on drying out
+        if (!poemQ[0].isActive) {
+            poemQ.push(structuredClone(poemQ[0]));
+            poemQ[0].isActive = true;
         }
 
-        speech.speak(poemQ[0][0]);
+        speech.speak(poemQ[0].beats[0]);
         // speech.speak("meat");
 
-        poemQ[0].splice(0, 1); //remove the beat that was just spoken
-        if (poemQ[0].length < 1) {
+        poemQ[0].beats.splice(0, 1); //remove the beat that was just spoken
+        if (poemQ[0].beats.length < 1) {
             poemQ.splice(0, 1); //remove line after last beat is spoken
         } 
 

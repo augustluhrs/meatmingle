@@ -7,18 +7,19 @@ const options = {
   maxSpeed: 4,
   minRefractory: 500,
   maxRefractory: 2000,
-  minInheritance: 2,
-  maxInheritance: 50,
+  minInheritance: .05, //making this a percentage now
+  maxInheritance: .85,
   minLubeToMate: 5, //now making this global so prepared makes more sense
   // maxLubeToMate: 50,
-  minLubeEfficiency: 1,
-  maxLubeEfficiency: 100,
-  maxWetness: 100, //upper range of dryness value
+  minLubeEfficiency: 0.8,
+  maxLubeEfficiency: 5,
+  maxWetness: 500, //upper range of dryness value
   mutationRate: 0.3,
   lubeTimer: 500,
-  lubeSize: 10,
+  lubeSize: 100,
   dryRate: 1000, //how fast everyone dries out
   //no matetimer b/c that comes from refractory?
+  lubeEmojis: ['💦', '💦', '💦', '💦', '🍆', '🍑', '🧴', '🧴', '🧴']
 }
 
 // const ecoWidth = 1920;

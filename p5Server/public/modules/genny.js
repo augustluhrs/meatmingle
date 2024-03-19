@@ -37,9 +37,9 @@ class Genny {
       //obscenity censor
       // console.log(this.poem);
       let matches = matcher.getAllMatches(this.poem);
-      console.log("profanity matches: \n", matches);
+      // console.log("profanity matches: \n", matches);
       this.poem = censor.applyTo(this.poem, matches);
-      console.log(this.poem);
+      // console.log(this.poem);
       this.poem = this.poem.replace(punctuationRegex, "");
 
       // this.colors = data.colors;
@@ -83,14 +83,14 @@ class Genny {
       this.genes = []; //don't need to fill with dummy data?
 
 
-      console.log("\nnew baby from :")
-      console.log(parentA.id);
-      console.log(parentB.id);
+      // console.log("\nnew baby from :")
+      // console.log(parentA.id);
+      // console.log(parentB.id);
 
       //crossover
       //randomly split poems in two sections and smash together
-      console.log(parentA.poem);
-      console.log(parentB.poem);
+      // console.log(parentA.poem);
+      // console.log(parentB.poem);
 
       let poemA = parentA.poem.split(" ");
       let poemB = parentB.poem.split(" ");
@@ -99,14 +99,14 @@ class Genny {
       while (this.poem.split(" ").length >= 12) { //dumb, i know. TODO replace with syllable count
         let splitA = Math.min(Math.max(1, Math.floor(Math.random() * poemA.length)), poemA.length);
         let splitB = Math.min(Math.max(1, Math.floor(Math.random() * poemB.length)), poemB.length);
-        console.log(splitA);
-        console.log(splitB);
+        // console.log(splitA);
+        // console.log(splitB);
 
         // let stringWithoutCommas = stringWithCommas.replace(/,/g, '');
         let firstHalf = poemA.slice(0, splitA);
-        console.log(firstHalf);
+        // console.log(firstHalf);
         let secondHalf = poemB.slice(splitB);
-        console.log(secondHalf);
+        // console.log(secondHalf);
         this.poem = [firstHalf, secondHalf].join(" ");
         this.poem = this.poem.replace(punctuationRegex, " ");
         // this.poem.replace(/,/g, ' ');
@@ -118,7 +118,7 @@ class Genny {
       //obscenity censor
       let matches = matcher.getAllMatches(this.poem);
       this.poem = censor.applyTo(this.poem, matches);
-      console.log(this.poem);
+      // console.log(this.poem);
 
       this.genes[0] = this.poem;
 
@@ -189,7 +189,7 @@ class Genny {
           //poem mutation TODO
           if (i == 0) {
             //replace a random word in poem with sex word from mutation pool
-            console.log("poem mutation!")
+            // console.log("poem mutation!")
             console.log(this.poem);
             let poemArr = this.poem.split(" ");
             let wordIndex = Math.floor(Math.random() * poemArr.length);
@@ -237,6 +237,7 @@ class Genny {
     this.isTooDry = false;
     this.isReadyToMate = false;
     this.isMating = false;
+    this.isHusk = false; //death by dryness
 
     //at end so flocking has all info
     this.boid = new Boid(this);
@@ -274,36 +275,20 @@ class Genny {
       this.wetness --;
     }
 
-    //check to see if too dry
-    // if (this.wetness <= this.minLubeToMate) {
-    //   this.isTooDry = true;
-    // } else {
-    //   this.isTooDry = false;
-    // }
-
-    //check to see if refractory period
-    // if (this.mateTimer >= this.refractoryPeriod) {
-    //   this.isHorny = true;
-    // } else {
-    //   this.isReadyToMate = false; 
-    // }
-
-    // //check if ready to mate
-    // if (this.isHorny && !this.isTooDry) {
-    //   this.isReadyToMate = true;
-    // } else {
-    //   this.isReadyToMate = false;
-    // }
-
     //check for mating conditions
     this.isTooDry = (this.wetness <= this.minLubeToMate);
     this.isHorny = (this.mateTimer >= this.refractoryPeriod);
     this.isReadyToMate = (this.isHorny && !this.isTooDry);
 
-    let [velocity, lube, mate] = this.boid.run(this, gennies, lubeLocations);
+    // let [velocity, lube, mate] = this.boid.run(this, gennies, lubeLocations);
+    let [lube, mate] = this.boid.run(this, gennies, lubeLocations);
 
     return [lube, mate];
   }
+
+  // dryOut(){
+    //triggered death on mating when left with negative wetness, turns into husk
+  // }
 
   display(){
     let pos = {x: this.pos.x, y: this.pos.y};
@@ -332,7 +317,13 @@ let mutationWords = [
   "naked",
   "thirsty",
   "lube",
-  "condom"
+  "condom",
+  "fuck",
+  "hard",
+  "ass",
+  "bussy",
+  "thussy",
+  "throat"
 ]
 
 module.exports = Genny;
