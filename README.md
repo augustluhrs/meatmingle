@@ -67,17 +67,18 @@ CC-BY-NC
   - [ ] asset tools
     - [ ] check generative stuff
     - [ ] check modular shapes
-    - [ ] pixels/silhouettes
+    - [ ] pixels/silhouettes censoring
   - [ ] misc
     - [X] random Genny button on screen
-      - [ ] random poem lines
-    - [ ] mutation word list
+      - [X] random poem lines
+    - [X] mutation word list
     - [X] new censor strategy
 - [ ] musical version
   - [X] TTS p5.speech
-  - [ ] pronouncing syllable check
+  - [X] pronouncing syllable check
   - [ ] strudel? or ableton with some sort of sync?
   - [ ] animation to a beat
+  - [ ] pitch adjustment auto-tune a la Harry
   - [ ] samples / loops
     - [ ] porn hub opening
     - [ ] careless whisper sax
@@ -87,6 +88,8 @@ CC-BY-NC
     - [ ] nasty filter
 - [ ] wand controller
   - [ ] why
+- [ ] hosting
+  - [ ] glitch test
 - [ ] backup plans
   - [ ] hack defense
     - [ ] how to hide source code / prevent code from executing in console?
