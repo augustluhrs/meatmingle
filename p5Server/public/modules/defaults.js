@@ -3,8 +3,8 @@
 const options = {
   minRadius: 50,
   maxRadius: 120,
-  minSpeed: 1,
-  maxSpeed: 7,
+  minSpeed: 0.25,
+  maxSpeed: 4,
   minRefractory: 500,
   maxRefractory: 2000,
   minInheritance: 2,

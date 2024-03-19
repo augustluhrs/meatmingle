@@ -18,11 +18,13 @@ A generative poetry ecosystem where participants create genital critters, "genni
 - Tiri Kananuruk
 - Allison Parrish
 - Duncan Figurski
+- Dave Currie
 - Marcel Truxillo
 - Schuyler DeVos
 - Matt Ross
 - Brent Bailey
 - James Hosken
+- John Bezark
 
 ## Credits
 
@@ -47,17 +49,19 @@ CC-BY-NC
 
 - [ ] Version 1 bug fixes
   - [ ] fix wetness / lube
-  - [ ] fix nuclear fission reproduction
+  - [X] fix nuclear fission reproduction
   - [X] fix DNA poem in nuclear children
   - [X] fix string commas
   - [ ] fix rotation
   - [ ] fix face flip on X
   - [ ] add genny view to mobile interface
   - [ ] fix no reproduction when ready and touching
-  - [ ] add more separation when not ready
+  - [X] add more separation when not ready
   - [ ] fix input line font size
+  - [X] fix child hues
 - [ ] p5 version updates
   - [ ] text box with lines that appear in a scroll bar window
+  - [ ] population control
   - [ ] updated assets
     - [ ] bodies
     - [ ] zones
@@ -159,13 +163,17 @@ __________________
 
 ## Instructions
 
+### Facilitating the Poem Party
+
+- Don't put too much lube around, the gennies will get overwhelmed if surrounded by it lol.
+
 ### To Fork/Hack
 
 - After installing the npm/yarn packages, you need to replace the obscenity/datasets in `node_modules` with those in `p5Server/obscenityDatasets`, or change them to your own filter preferences.
 
 ## Work Log
 
-### Monday Marathon Pomodoros
+### Monday Notes
 
 - ~~DNA rework~~
 - mating restrictions
@@ -208,3 +216,9 @@ __________________
 - test on glitch to make sure everything works
 
 - speech queue needs to be based on the gennies that exist, not just arbitrary repetition, esp. once gennies are gone. maybe locking the poems on the line box protects the genny from drying out? can highlight with good aura -- that way it also promotes the poem heading in a certain direction since they have a higher likelihood to reproduce (unless the wetness lost scales by number of offspring) (can't just give them infinite wetness b/c might go nuclear)
+
+- test performance.now() vs millis()
+
+- mate with more than two partners -- anyone who joins the puddle within the timelimit, the genny has words from all poems (might be too busy/nonsensical tho)
+
+- fix syllable distribution over beat

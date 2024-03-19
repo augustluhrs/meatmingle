@@ -129,7 +129,7 @@ screen.on('connection', (socket) => {
 //
 
 setInterval( () => {
-  let updates = {
+  let updates = { //this seems like a bad thing to do
     gennies: [],
     lubeLocations: [],
   };
@@ -182,7 +182,6 @@ setInterval( () => {
 }, 10);
 
 function checkForMates(mates) {
-    //now the mates are triggering in flocking for quadtree usage, but the ecosystem makes babies here
     //just check for pair matches first
     let pairs = [];
     for (let i = mates.length - 1; i >= 0; i--) {
@@ -261,7 +260,7 @@ let randomPoems = [
   "this is a test line of poetry",
   "forsooth, I dost dingle thou rizz",
   "red fish blue fish one fish two bitch",
-  "plus hydro glide for your eyeballs",
+  // "plus hydro glide for your eyeballs",
   "yeah idk what this is all about",
   "shit i forgot to take my vitamins",
   "wonderville is wonderful",

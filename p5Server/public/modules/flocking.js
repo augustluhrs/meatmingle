@@ -20,17 +20,19 @@ class Boid {
         this.perceptionRadius = genny.perceptionRadius || 500;
         this.maxSpeed = genny.maxSpeed;
         this.maxForce = genny.maxForce || 0.05;
-        this.desiredSeparation = genny.desiredSeparation || 25;
-        this.separationBias = genny.separationBias || 5; //go down if ready to mate
+        this.desiredSeparation = genny.desiredSeparation || 30;
+        this.separationBias = genny.separationBias || 10; //go down if ready to mate
         this.desiredFlockSize = genny.desiredFlockSize || 100; //neighbor distance
         this.alignmentBias = genny.alignmentBias || 1;
         this.cohesionBias = genny.cohesionBias || 1.5;
         this.hunger = genny.hunger || 10; //to mult food seeking
     }
 
-    // main genny flocking/eat/mate function
-    // run (self, qtree) {
+    // main genny flocking/lube/mate function
     run (self, gennies, lubeLocations) {
+        //first adjust biases if not ready to mate
+        this.separationBias = (self.isTooDry) ? 10 : 2;
+        this.cohesionBias = (self.isHorny) ? 2 : 0.5;
 
         let surroundings = this.lookAround(self, gennies, lubeLocations);
         this.flock(surroundings.neighbors);
@@ -88,7 +90,6 @@ class Boid {
 
     cruise (self, neighbors) {
         let mate = undefined;
-        //TODO why forEach vs for/of?
         for (let neighbor of neighbors) {
             if (Math.hypot((self.pos.x - neighbor.pos.x), (self.pos.y - neighbor.pos.y)) <= (self.radius / 2 + neighbor.radius / 2) &&
                 self.isReadyToMate) { 

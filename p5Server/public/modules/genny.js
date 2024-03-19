@@ -141,14 +141,16 @@ class Genny {
       let hueLerp;
       let colorsA = parentA.genes[1];
       let colorsB = parentB.genes[1];
+      this.genes[1] = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]; //dummy colors
 
       for (let i = 0; i < 3; i++) {
         //fixing issue where lerping between black/white (low sat) has weird hue
         if(colorsA[i][1] < .1 && colorsB[i][1] > .1) {
-          colorsA[i][0] = colorsB[i][0];
+          colorsA[i][1] = colorsB[i][1];
         } else if (colorsB[i][1] < .1 && colorsA[i][1] > .1) {
-            colorsB[i][0] = colorsA[i][0];
+            colorsB[i][1] = colorsA[i][1];
         }
+
         //now lerp hue across smallest path around ring
         if(Math.abs(colorsA[i][0] - colorsB[i][0]) >= .5){ //makes sure always takes the shortest path around the hue ring
             let smallerVal;
@@ -164,13 +166,15 @@ class Genny {
         } else {
             hueLerp = lerp(colorsA[i][0], colorsB[i][0], D.rand_bm(0, 1))
         }
-        this.genes[1] = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]; //dummy colors
+
         this.genes[1][i] = [ //lerping hue normally unless would need to cross over 0, sat and light lerping normally
             hueLerp,
             lerp(colorsA[i][1], colorsB[i][1], D.rand_bm(0, 1)),
             lerp(colorsA[i][2], colorsB[i][2], D.rand_bm(0, 1))
         ];
       }
+      // console.log("child colors");
+      // console.log(this.genes[1]);
 
       //for all genes but color, normal lerp, with box-mueller random function
       // for (let i = 2; i < this.genes.length; i++) { 
@@ -271,24 +275,30 @@ class Genny {
     }
 
     //check to see if too dry
-    if (this.wetness <= this.minLubeToMate) {
-      this.isTooDry = true;
-    } else {
-      this.isTooDry = false;
-    }
-    //check to see if refractory period
-    if (this.mateTimer >= this.refractoryPeriod) {
-      this.isHorny = true;
-    } else {
-      this.isReadyToMate = false; 
-    }
+    // if (this.wetness <= this.minLubeToMate) {
+    //   this.isTooDry = true;
+    // } else {
+    //   this.isTooDry = false;
+    // }
 
-    //check if ready to mate
-    if (this.isHorny && !this.isTooDry) {
-      this.isReadyToMate = true;
-    } else {
-      this.isReadyToMate = false;
-    }
+    //check to see if refractory period
+    // if (this.mateTimer >= this.refractoryPeriod) {
+    //   this.isHorny = true;
+    // } else {
+    //   this.isReadyToMate = false; 
+    // }
+
+    // //check if ready to mate
+    // if (this.isHorny && !this.isTooDry) {
+    //   this.isReadyToMate = true;
+    // } else {
+    //   this.isReadyToMate = false;
+    // }
+
+    //check for mating conditions
+    this.isTooDry = (this.wetness <= this.minLubeToMate);
+    this.isHorny = (this.mateTimer >= this.refractoryPeriod);
+    this.isReadyToMate = (this.isHorny && !this.isTooDry);
 
     let [velocity, lube, mate] = this.boid.run(this, gennies, lubeLocations);
 
