@@ -62,17 +62,8 @@ socket.on('newGenny', (data) => {
 
     //add poem beats to queue 
     poemQ.push(genny.beats);
+    addPoemBlock(genny.poem, genny.id);
 
-    // let noRepeats = true; //not sure if I need this, but safe?
-    // for (let line of poemQ) {
-    //     if (line.id == genny.id) {
-    //         noRepeats = false;
-    //         continue; //hmm
-    //     }
-    // }
-    // if (noRepeats) {
-        // poemQ.push({id: genny.id, beats: genny.beats});
-    // }
 });
 
 socket.on('update', (data) => {
@@ -110,17 +101,24 @@ let isSpeechLoaded = false; //silly but w/e, it's legible
 let beatInterval = 0;
 let prevTime = 0;
 let beat = 0;
+let isPaused = false;
 let poemQ = []; //stores the lines to be read on beat, {id, beats}, recycles last two
 
 //ui/display
 // let aspectRatio = 16/9;
 let font;
+let canvas;
 let images = {
     body: [],
     zones: [],
     hair: []
 }
 let bgHue = 0;
+
+//queue poem blocks
+let poemBlocks = []; //storing so can remove all when genny dies (unless protected)
+// let poemBlockDiv;
+let testID = "dfadfa"
 
 //buttons
 let randomGennyButton, pauseButton, resumeButton;
@@ -133,7 +131,14 @@ function preload(){
 }
 
 function setup(){
-    createCanvas(1920, 1080);
+    // canvas = createCanvas(1080, 1080).class("divs"); //making room for panel
+    canvas = createCanvas(1080, 1080); //making room for panel
+    canvas.parent("page");
+    panel = createDiv().id("panel").parent("page");
+    
+    poemBlocks.push(createDiv("test line of poetry").class(`poemBlock ${testID}`).parent("panel"));
+
+    // createCanvas(1920, 1080);
     // let canvasWidth = min(windowWidth, windowHeight * aspectRatio);
     // let canvasHeight = min(windowWidth / aspectRatio, windowHeight);
     // createCanvas(canvasWidth, canvasHeight);
@@ -165,10 +170,12 @@ function setup(){
     randomGennyButton = createButton("RANDOM GENNY").class("buttons").mousePressed(() => {socket.emit("makeRandomGenny")});
     pauseButton = createButton("pause").class("buttons").mousePressed(() => {
         socket.emit("pause");
+        isPaused = true;
         speech.pause();
     });
     resumeButton = createButton("resume").class("buttons").mousePressed(() => {
         socket.emit("resume");
+        isPaused = false;
         speech.resume();
     });
 
@@ -211,7 +218,7 @@ function draw(){
     // speech.speak("meat meat meat meat");
 
     // testVoiceLoop();
-    if (isSpeechLoaded && poemQ.length > 0) {
+    if (isSpeechLoaded && poemQ.length > 0 && !isPaused) {
         beatLoop();
     }
 }
@@ -389,18 +396,8 @@ function testVoiceLoop(){
     }        
 }
 
-
-
-//splitting string into 4 equal parts and starting each on the beat
-/*
-let beats = 4;
-let bpm = 126;
-let beatInterval = 0;
-let poemQ = []; //poem queue
-function setBeat(beats, bpm) {
-    beatInterval = ((beats / (bpm/60)) / beats) * 1000;
+//for adding to queue panel
+function addPoemBlock(poem, id){
+    poemBlocks.push(createDiv(poem).class(`poemBlock ${id}`).parent("panel"));
 }
-// function beatBar(poem) {
-*/
-
 

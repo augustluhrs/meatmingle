@@ -8,10 +8,6 @@ body {
   overflow: hidden; */
 }
 
-.divs {
-  display: flex;
-}
-
 .inputs {
   /* display: flex; */
   /* margin: auto; */
@@ -42,3 +38,29 @@ body {
   background-color: white;
   color: rgb(108,112,45);
 }
+
+#page {
+  width: 1920px;
+  height: 1080px;
+  display: flex;
+  /* overflow-y: scroll; */
+}
+
+#panel {
+  width: 840px;
+  height: 1080px;
+  overflow-y: scroll;
+}
+
+.poemBlock {
+  /* display: flexbox; */
+  width: 100%;
+  padding: 10px;
+}
+
+
+/* .divs { */
+  /* display: flex; */
+  /* width: 100%; */
+  /* padding: 10px; */
+/* } */

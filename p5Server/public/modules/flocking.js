@@ -36,6 +36,7 @@ class Boid {
 
         let surroundings = this.lookAround(self, gennies, lubeLocations);
         this.flock(surroundings.neighbors);
+        // if (gennies.length > 1) {this.flock(surroundings.neighbors)}; //fixing weird bug with one genny getting stuck on edge
         let snack = this.graze(surroundings.lubeAround);
         let mate = this.cruise(self, surroundings.neighbors); //findMate() -- needs self for mating info
         // console.log("snack: " + snack)

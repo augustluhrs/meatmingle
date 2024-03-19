@@ -222,3 +222,43 @@ __________________
 - mate with more than two partners -- anyone who joins the puddle within the timelimit, the genny has words from all poems (might be too busy/nonsensical tho)
 
 - fix syllable distribution over beat
+
+### Tuesday Notes
+
+- not sure why they're getting stuck on the right edge after resize. can't replicate it enough to isolate variables, but seems like has to be in flocking code -- either the bias ternaries I added or some error in the new ecoWidth? doesn't make sense. Luckily they still follow lube, so can just fix manually...
+
+- tech list
+  - mic on stand
+  - aux out (need to check laptop...........)
+  - test glitch
+
+- after Dentist
+  - add ecosystem pop limits
+  - change poemQ to match karaoke, move blocks each bar
+  - have karaoke queue
+  - fix beat distro
+  - click blocks to show options (or just have options always there?)
+    - move up
+    - move down
+    - kill
+    - protect
+  - current block will highlight its genny
+- later
+  - check tone loop / beat
+    - test performance.now()
+  - test Ableton sync
+- misc
+  - new background
+  - new genny assets
+  - genny asset on mobile
+  - test optimization
+  - check middleware for protecting server
+- stretch
+  - arduino to p5 (via TD?)
+    - IMU? does what?
+      - scrolls karaoke? is seek/avoid in party? deposits lube? i think that makes the most sense (lol)
+    - button
+      - seems like only makes sense in conjunction with IMU or joystick.
+    - motor
+      - would be fun to have it vibrate
+  - test the bulkiness of using the breadboard

@@ -21,7 +21,8 @@ const options = {
   //no matetimer b/c that comes from refractory?
 }
 
-const ecoWidth = 1920;
+// const ecoWidth = 1920;
+const ecoWidth = 1080;
 const ecoHeight = 1080;
 
 function map(n, start1, stop1, start2, stop2) {
