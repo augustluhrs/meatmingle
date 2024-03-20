@@ -114,6 +114,8 @@ let poemQ = []; //stores the lines to be read on beat, {id, beats}, recycles las
 //ui/display
 let font;
 let canvas;
+let randomGennyButton, pauseButton, resumeButton, clearLubeButton; //buttons
+let muteCheckbox; //checkboxes
 let images = {
     body: [],
     zones: [],
@@ -123,11 +125,6 @@ let bgHue = 0;
 
 //queue poem blocks
 let poemBlocks = []; //storing so can remove all when genny dies (unless protected)
-// let poemBlockDiv;
-let testID = "dfadfa"
-
-//buttons
-let randomGennyButton, pauseButton, resumeButton;
 
 function preload(){
     // font = loadFont("../assets/fonts/fugaz.ttf");
@@ -141,7 +138,6 @@ function setup(){
     canvas.parent("page");
     panel = createDiv().id("panel").parent("page");
     
-    // poemBlocks.push(createDiv("test line of poetry").class(`poemBlock ${testID}`).parent("panel"));
 
     // createCanvas(1920, 1080);
     // let canvasWidth = min(windowWidth, windowHeight * aspectRatio);
@@ -183,6 +179,11 @@ function setup(){
         isPaused = false;
         speech.resume();
     });
+    clearLubeButton = createButton("clearLube").class("buttons").mousePressed(() => {
+        socket.emit("clearLube");
+    });
+    muteCheckbox = createCheckbox("mute voice", false).class('buttons');
+
 
 
     //get ecosystem
@@ -238,8 +239,12 @@ function draw(){
 
     // testVoiceLoop();
     if (isSpeechLoaded && poemQ.length > 0 && !isPaused) {
+        speech.setVolume((muteCheckbox.checked()) ? 0.0 : 1.0);
         beatLoop();
     }
+
+    //bpm check
+    // text(runningBPM, 10, 10);
 }
 
 function showGenny(gennyData){
@@ -358,7 +363,7 @@ function showGenny(gennyData){
 }
 
 function mouseClicked(){
-    if (mouseY < height){ //to prevent from triggering when clicking fish button
+    if (mouseY < height && mouseX < width) {
         socket.emit('newLube', {x: mouseX, y: mouseY});
     }
 }
@@ -374,6 +379,10 @@ function mouseClicked(){
 //     return pg;
 // }
 
+let runningBPM = 0;
+let beatsElapsed = 0;
+let minutesElapsed = 0;
+let lastMinute = 0;
 function beatLoop() { //auto from poemQ
     let currentTime = millis();
     if (currentTime - prevTime >= beatInterval) { //hmm will this actually be on beat or will it depend on loop/browswer?
@@ -407,7 +416,16 @@ function beatLoop() { //auto from poemQ
             bgHue += 360/8;
         }
 
-        // console.log(`currentTime: ${currentTime}, prevTime: ${prevTime})`;
+        //trying a dumb bpm check to see if i can sync ableton
+        /*
+        beatsElapsed++;
+        if (currentTime - lastMinute >= 60000) {
+            lastMinute += 60000;
+            minutesElapsed++;
+            runningBPM = Math.fround(beatsElapsed / minutesElapsed);
+            console.log(`beats: ${beatsElapsed}, mins: ${minutesElapsed}`);
+        }
+        */
     }
 }
 

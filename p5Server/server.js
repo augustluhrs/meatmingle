@@ -1,7 +1,7 @@
 /*
     ~ * ~ * ~ * SERVER
     ~ * ~ * ~ * 
-    ~ * ~ * ~ * 
+    ~ * ~ * ~ * I regret, but I do not repent.
     ~ * ~ * ~ * 
 */
 
@@ -30,10 +30,13 @@ const Husk = require("./public/modules/husk");
 let gennies = [];
 let lubeLocations = [];
 let husks = [];
-// let updates = {
-//   gennies: [],
-//   lubeLocations: [],
-// };
+let updates = {
+  gennies: [],
+  lubeLocations: [],
+  husks: [],
+  newHusks: []
+};
+let screenIsPaused = false;
 
 //beats/speech
 const Beats = require("./public/modules/beats");
@@ -83,14 +86,6 @@ let screen = io.of('/screen');
 screen.on('connection', (socket) => {
   // console.log('new screen client!: ' + socket.id);
 
-  socket.on("makeRandomGenny", () => {
-    addRandomGenny();
-  });
-
-  socket.on("newLube", (data) => {
-    lubeLocations.push(new Lube(D.options.lubeSize, data));
-  });
-
   socket.on("getEcosystem", (socket) => { //when screen resets
     // console.log('sending screen the current gennies');
     for (let genny of gennies) {
@@ -99,6 +94,31 @@ screen.on('connection', (socket) => {
 
     screen.emit("changeSettings", {beatInterval: Beats.beatInterval});
   });
+
+  socket.on("makeRandomGenny", () => {
+    addRandomGenny();
+  });
+
+  socket.on("newLube", (data) => {
+    lubeLocations.push(new Lube(D.options.lubeSize, data));
+  });
+
+  socket.on("clearLube", ()=>{
+    //screen button that clears all lube
+    lubeLocations = [];
+  });
+
+  socket.on("pause", ()=>{
+    //screen button that pauses all updates (but new gennies will still get added)
+    screenIsPaused = true;
+  });
+
+  socket.on("resume", ()=>{
+    //screen button that clears all lube
+    screenIsPaused = false;
+  });
+
+
 
   //listen for this client to disconnect
   socket.on('disconnect', () => {
@@ -111,7 +131,12 @@ screen.on('connection', (socket) => {
 //
 
 setInterval( () => {
-  let updates = { //this seems like a bad thing to do
+  //check for pause from screen
+  if (screenIsPaused) {
+    return;
+  }
+  // let updates = { //this seems like a bad thing to do
+  updates = {
     gennies: [],
     lubeLocations: [],
     husks: [],
@@ -122,7 +147,6 @@ setInterval( () => {
   lubeLocations.forEach( (lube) => {
     updates.lubeLocations.push(lube.display());
   });
-
 
   //feed and fuck
   let mates = [];
@@ -278,5 +302,10 @@ let randomPoems = [
   "wonderville is wonderful",
   "august why are you like this",
   "sometimes Todd, sometimes",
-  "lick that ice cream off the cone"
+  "Todd regrets inviting me",
+  "lick that ice cream off the cone", //shout out to Only Fire <3
+  "lets do yoga on the bed",
+  "do you want to bump uglies",
+  "I'm kind of a big deal",
+  // "boy just do what I said",
 ]

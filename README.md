@@ -162,6 +162,9 @@ __________________
 - though in our world procreation is often not the byproduct or even goal of sex, for the gennies, their sex always results in a new genny joining the party.
 - (explanation of stats)
 - (showing a genny getting too dry and withering away)
+- showing bounce of bounds (i've always said my sex life was like the game where you watch the DVD logo bounce around but it never quite hits the right spot)
+- karaoke queue
+  - chose these colors totally randomly
 
 ## Instructions
 
@@ -270,3 +273,36 @@ __________________
       - would be fun to have it vibrate
   - test the bulkiness of using the breadboard
   - switch to RiTa.js so can analyze mutated word and replace with word that is the same type
+
+### Wednesday Notes
+
+- count word and syllable, so 9 words with one syllable spread out
+- shader tests
+  - cool background
+  - glitch effect on sex to beat
+  - using porn to fill shapes as texture
+- sex timer
+- mobile updates
+- queue updates
+  - blocks tracking karaoke
+  - buttons on blocks
+  - highlight genny that's being read
+- UI
+  - pause on server
+  - ~~mute checkbox~~
+  - clear lube button
+  - hover to show genny stats
+  - meat mingle title on karaoke queue
+- music
+  - ~~test aux out~~
+  - test ableton sync with midi controller
+  - test tone.js loop
+  - mute button
+  - ~~bpm visualizer for sync~~
+  - bpm adjustment buttons
+- vibe as mouse
+- line drawing test
+- glitch
+  - upload
+  - test server
+  - test wifi

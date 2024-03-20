@@ -64,9 +64,9 @@ body {
   font-family: "fugaz";
   padding: 10px;
   margin-bottom: 10px;
-  border: 6px solid #f48b8b; /* Chunky border */
+  border: 6px solid #9ad4fb; /* Chunky border */
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* Shadow */
-  background-color: #9ad4fb; /* Background color */
+  background-color: #f8aecf; /* Background color */
 
 }
 

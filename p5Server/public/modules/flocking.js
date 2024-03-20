@@ -5,6 +5,8 @@ const Victor = require("victor");
 const Genny = require("./genny");
 const D = require("./defaults");
 
+let goalPolyculeSize = [2, 3, 4, 4, 5, 6, 7, 8, 9];
+
 //just for calculating the flocking forces, actual pos is outside
 class Boid {
     constructor(genny) {
@@ -17,9 +19,10 @@ class Boid {
         this.perceptionRadius = genny.perceptionRadius || 500;
         this.maxSpeed = genny.maxSpeed;
         this.maxForce = genny.maxForce || 0.05;
-        this.desiredSeparation = genny.desiredSeparation || 30;
+        this.desiredSeparation = genny.desiredSeparation || 80;
         this.separationBias = genny.separationBias || 10; //go down if ready to mate
-        this.desiredFlockSize = genny.desiredFlockSize || 100; //neighbor distance
+        this.desiredFlockSize = genny.desiredFlockSize || 12;
+        // this.desiredFlockSize = genny.desiredFlockSize || goalPolyculeSize[Math.floor(Math.random() * goalPolyculeSize.length)]; //num people they want around
         this.alignmentBias = genny.alignmentBias || 1;
         this.cohesionBias = genny.cohesionBias || 1.5;
         this.hunger = genny.hunger || 10; //to mult food seeking
@@ -28,8 +31,9 @@ class Boid {
     // main genny flocking/lube/mate function
     run (self, gennies, lubeLocations) {
         //first adjust biases if not ready to mate
-        this.separationBias = (self.isTooDry) ? 10 : 2;
-        this.cohesionBias = (self.isHorny) ? 2 : 0.5;
+        this.separationBias = (self.isTooDry) ? 20 : 1;
+        this.cohesionBias = (self.isHorny) ? 5 : 1;
+        this.alignmentBias = (self.isReadyToMate) ? 10: 1.5;
 
         let surroundings = this.lookAround(self, gennies, lubeLocations);
         this.flock(surroundings.neighbors);
@@ -75,7 +79,7 @@ class Boid {
         let snack = undefined;
         lubeAround.forEach( (lube) => {
             if (Math.hypot((this.pos.x - lube.pos.x), (this.pos.y - lube.pos.y)) <= this.r) {
-                snack = lube; //send up to splice and add to lifeForce
+                snack = lube; //send up to splice and add to wetness
             } else {
                 //fine to do this for each b/c lube drive is heavier? 
                 //will they get stuck between lube? maybe should check for biggest lube? or depends... -- edit: yes, TODO FIX

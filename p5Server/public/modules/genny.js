@@ -190,14 +190,29 @@ class Genny {
       for (let i = 0; i < 7; i++) {
         if (Math.random() < D.options.mutationRate) {
           console.log(`MUTATION: ${i}`);
-          //poem mutation TODO
+          //poem mutation
           if (i == 0) {
-            //replace a random word in poem with sex word from mutation pool
             // console.log("poem mutation!")
-            console.log(this.poem);
+            // console.log(this.poem);
+
+            //replace a random word in poem with sex word from mutation pool
+            //now adding chance to add random word
             let poemArr = this.poem.split(" ");
-            let wordIndex = Math.floor(Math.random() * poemArr.length);
-            poemArr.splice(wordIndex, 1, mutationWords[Math.floor(Math.random() * mutationWords.length)]);
+            let mutationWord = mutationWords[Math.floor(Math.random() * mutationWords.length)]
+            if (Math.random() > 0.5) {
+              //add word
+              let wordIndex = Math.floor(Math.random() * poemArr.length + 1);
+              if (wordIndex == poemArr.length) {
+                poemArr.push(mutationWord);
+              } else {
+                poemArr.splice(wordIndex, 0, mutationWord);
+              }
+            } else {
+              //replace word
+              let wordIndex = Math.floor(Math.random() * poemArr.length);
+              poemArr.splice(wordIndex, 1, mutationWord);
+            }
+           
             this.poem = poemArr.join(" ");
             this.poem = this.poem.replace(punctuationRegex, " ");
             console.log(this.poem);
@@ -305,6 +320,14 @@ let mutationWords = [
   "meat",
   "mingle",
   "noody",
+  "word",
+  "hack",
+  "wordhack",
+  "wonderville",
+  "brooklyn",
+  "art",
+  "poem",
+  "theythem",
   "moist",
   "bounce",
   "poem",
