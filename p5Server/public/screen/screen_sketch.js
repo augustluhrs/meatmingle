@@ -61,7 +61,7 @@ socket.on('newGenny', (data) => {
     }
 
     //add poem beats to queue 
-    poemQ.push({id: genny.id, beats: genny.beats, isActive: false});
+    poemQ.push({poem: genny.poem, id: genny.id, beats: genny.beats, isActive: false, diedMidLine: false});
     addPoemBlock(genny.poem, genny.id);
 
 });
@@ -73,19 +73,41 @@ socket.on('update', (data) => {
     if (data.newHusks.length > 0) {
         for (let newHuskID of data.newHusks) {
             //remove from beat Queue
+            let ignoreTop = false;
             for (let i = poemQ.length - 1; i >= 0; i--) {
                 let p = poemQ[i];
                 if (p.id == newHuskID && !p.isActive) { //prevents beat from getting off if current line is from husk
-                    poemQ.splice(i, 1);
+                    if (p.isActive) {
+                        //the current line being spoken needs to be removed, but will cause errors
+                        p.diedMidLine = true;
+                        ignoreTop = true;
+                    } else {
+                        poemQ.splice(i, 1);
+                    }
                 }
             }
             // remove from karaoke panel
             // for (let i = )
             //not sure if this will bug out if removed while dragging block TODO test
-            let huskBlocks = document.getElementsByClassName(newHuskID);
-            huskBlocks.forEach( (hb)=>{
-                hb.remove();
-            });
+            //need to check to make sure not the top line
+            if (!ignoreTop) {
+                let huskBlocks = document.getElementsByClassName(newHuskID);
+                huskBlocks.forEach( (hb)=>{
+                    hb.remove();
+                });
+            } else {
+                //need to only iterate through the children below top? hmm...  seems like I'm doing this a dumb way
+                let parent = document.getElementById('panel');
+                let children = parent.children;
+                children.forEach ((child)=>{
+                    if (parent.firstChild != child) {
+                        child.remove();
+                    } else {
+                        console.log('worked i think')
+                    }
+                })
+            }
+            
 
         }
     }
@@ -399,14 +421,32 @@ function beatLoop() { //auto from poemQ
         if (!poemQ[0].isActive) {
             poemQ.push(structuredClone(poemQ[0]));
             poemQ[0].isActive = true;
-        }
+            addPoemBlock(poemQ[0].poem, poemQ[0].id); //seems dumb to create two separate things, might get unlinked
+        } 
 
         speech.speak(poemQ[0].beats[0]);
         // speech.speak("meat");
 
         poemQ[0].beats.splice(0, 1); //remove the beat that was just spoken
         if (poemQ[0].beats.length < 1) {
-            poemQ.splice(0, 1); //remove line after last beat is spoken
+            //remove the karaoke block at the top (should be matching id...)
+            //but only if genny is still alive, or else will throw error
+            if (!poemQ[0].diedMidLine) {
+                let topBlock = document.querySelector(`#panel .${poemQ[0].id}:first-child`);
+                // console.log(document.querySelector(`#panel .${poemQ[0].id}:first-child`));
+                // let topBlock = document.querySelector(`#panel :first-child`); //chat gpt for the query
+                console.log(document.getElementById('panel').children);
+                if (topBlock != null) {
+                    topBlock.remove();
+                } else {
+                    console.log("wtf is happening");
+                    console.log(poemQ[0]);
+                    console.log(document.getElementById('panel').firstChild);
+                } 
+            }
+
+            //remove line after last beat is spoken
+            poemQ.splice(0, 1);
         } 
 
         if (beat == 4) {
@@ -441,10 +481,10 @@ function testVoiceLoop(){
 
 //for adding to queue panel
 function addPoemBlock(poem, id){
-    // let newBlock = createDiv(poem).class(`poemBlock ${id}`).parent("panel");
-    let newBlock = createDiv(poem).class(`poemBlock`).parent("panel");
-    newBlock.setAttribute('data-id', id);
-
+    let newBlock = createDiv(poem).class(`poemBlock ${id}`).parent("panel");
+    // let newBlock = createDiv(poem).class(`poemBlock`).parent("panel");
+    // newBlock.setAttribute('data-id', id);
+    //don't need to append? 
     poemBlocks.push(newBlock);
 }
 
