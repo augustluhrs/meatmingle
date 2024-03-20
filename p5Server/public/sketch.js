@@ -18,6 +18,14 @@ socket.on('connect', () => {
 // UI VARIABLES
 
 let font;
+// let gennyLooks = []; //for storing image's tint/resize
+let images = {
+  body: [],
+  zones: [],
+  hair: []
+}
+let minRadius = 50;
+let maxRadius = 120;
 
 let canvas;
 let statsDiv, colorDiv, readyDiv, nameDiv, yesDiv, noDiv;
@@ -49,6 +57,7 @@ let genny = {
   body: 0, //on server, looks array [body, zones, hair]
   zones: 0,
   hair: 0,
+  // looks: [], //images
   colors: [ randomHex(), randomHex(), randomHex() ],
   // primaryColor: randomHex(),
   // secondaryColor: randomHex(),
@@ -57,11 +66,14 @@ let genny = {
   prepared: 16 - yAxis,
   thirsty: xAxis,
   generous: 16 - xAxis,
+  radius: 100,
   position: {x: 0, y: 0}, //will get overwritten on server
 }
 
 function preload(){
   font = loadFont('assets/fonts/fugaz.ttf');
+  images.body.push(loadImage("assets/body/blob1.png"));
+  images.hair.push(loadImage("assets/hair/longHair.png"));
 }
 
 function setup(){
@@ -78,6 +90,13 @@ function setup(){
     textAlign(CENTER, CENTER);
     textSize(width/40);
     strokeWeight(2);
+    // colorMode();
+
+    genny.radius = map(this.generous, 0, 16, minRadius, maxRadius);
+
+    //images
+    images.hair[0].resize(100, 0); //long hair
+    images.hair[0].filter(INVERT);
 
     //color pickers
     colorPickerPrimary = createColorPicker(genny.colors[0]).position(width/4, 5.5 * height/10).size(width/2, height/14);
@@ -189,7 +208,7 @@ function setup(){
 
     //genny info
     genny.position.x = width/2;
-    genny.position.y = 3.5 * height / 10;
+    genny.position.y = 2.5 * height / 10;
     type = checkType();
 };
 
@@ -263,31 +282,42 @@ function updateGenny(){
     genny.prepared = 16 - statsSlider.yVal;
     genny.thirsty = statsSlider.xVal;
     genny.generous = 16 - statsSlider.xVal;
+    genny.radius = map(genny.generous, 0, 16, minRadius, maxRadius);
 }
 
 function displayGenny(){
     push();
     translate(genny.position.x, genny.position.y);
-/*
-    //back fin
-    fill(genny.secondaryColor);
-    let back = genny.backFinSize;
-    let offset = genny.bodyLength / 1.8;
-    triangle(-back + offset, 0, back + offset, -back, back + offset, back);
+    //body fill
+    push();
+    // fill(genny.colors[0][0], genny.colors[0][1], genny.colors[0][2]);
+    fill(genny.colors[0]);
+    // fill(0);
+    ellipse(0, 0, genny.radius); //i know it's not radius, shhhh
+    pop();
 
-    //body
-    fill(genny.primaryColor);
-    ellipse(0, 0, genny.bodyLength, genny.bodyWidth);
+    //zone fill
+    push();
+    // fill(genny.colors[1][0], genny.colors[1][1], genny.colors[1][2]);
+    fill(genny.colors[1]);
+    ellipse(0, 0 - genny.radius / 2, genny.radius / 3);
+    pop();
 
-    //front fin
-    fill(genny.secondaryColor);
-    let front = genny.frontFinSize / 2;
-    triangle(-front, 0, front, -front, front, front);
+    //hair fill
+    push();
+    // tint(genny.colors[2][0], genny.colors[2][1], genny.colors[2][2]);
+    tint(genny.colors[2]);
+    image(images.hair[0], 0, genny.radius / 3, genny.radius, genny.radius);
+    pop();
 
-    //eye
-    fill(0);
-    ellipse((-genny.bodyLength / 2) + (genny.bodyLength / 8), 0, 10, 10);
-*/
+    //face
+    push();
+    textFont('Verdana');
+    textSize(genny.radius/3);
+    let facePos = {x: 0, y: 0}; //????
+    // text("👁️👄👁️", facePos.x, facePos.y);
+    text("👁️👄👁️", 0, 0);
+    pop();
     pop();
 }
 

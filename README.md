@@ -172,6 +172,10 @@ __________________
 
 - Don't put too much lube around, the gennies will get overwhelmed if surrounded by it lol.
 
+### Arduino Tips
+
+- On Windows, might need to install drivers for "USB Input Device" in order for the Nano 33 IoT to be used as a mouse.
+
 ### To Fork/Hack
 
 - After installing the npm/yarn packages, you need to replace the obscenity/datasets in `node_modules` with those in `p5Server/obscenityDatasets`, or change them to your own filter preferences.

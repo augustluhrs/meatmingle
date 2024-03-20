@@ -69,6 +69,9 @@ inputs.on('connection', (socket) => {
     gennies.push(newGenny);
     
     screen.emit("newGenny", newGenny);
+    vibe.emit("newGenny", newGenny);
+    // io.emit("newGenny", newGenny);
+
   });
 
   //listen for this client to disconnect
@@ -90,8 +93,9 @@ screen.on('connection', (socket) => {
     // console.log('sending screen the current gennies');
     for (let genny of gennies) {
       screen.emit("newGenny", genny); //hmm forgot emit rules TODO
+      // io.emit("newGenny", newGenny);
     }
-
+    // io.emit("changeSettings", {beatInterval: Beats.beatInterval});
     screen.emit("changeSettings", {beatInterval: Beats.beatInterval});
   });
 
@@ -123,6 +127,34 @@ screen.on('connection', (socket) => {
   //listen for this client to disconnect
   socket.on('disconnect', () => {
     // console.log('screen client disconnected: ' + socket.id);
+  });
+});
+
+//
+// vibe control screen (no speech or queue)
+//
+
+let vibe = io.of('/vibe');
+vibe.on('connection', (socket) => {
+  // console.log('new vibe client!: ' + socket.id);
+
+  socket.on("getEcosystem", (socket) => { //when vibe resets
+    // console.log('sending vibe the current gennies');
+    for (let genny of gennies) {
+      vibe.emit("newGenny", genny); //hmm forgot emit rules TODO
+    }
+
+    vibe.emit("changeSettings", {beatInterval: Beats.beatInterval});
+  });
+
+  socket.on("newLube", (data) => {
+    console.log("lube from vibe");
+    lubeLocations.push(new Lube(D.options.lubeSize, data));
+  });
+
+  //listen for this client to disconnect
+  socket.on('disconnect', () => {
+    // console.log('vibe client disconnected: ' + socket.id);
   });
 });
 
@@ -202,8 +234,9 @@ setInterval( () => {
     }
   }
   
-
+  // io.emit("update", updates);
   screen.emit("update", updates);
+  vibe.emit("update", updates);
 }, 10);
 
 let numGennies, lubeFactor; //trying to reuse more variables to avoid performance hits
@@ -251,6 +284,8 @@ function checkForMates(mates) {
         // parents.B.offspring.push({name: newBaby.name})
         gennies.push(newBaby);
         screen.emit("newGenny", newBaby);
+        vibe.emit("newGenny", newBaby);
+        // io.emit("newGenny", newBaby);
 
         //check for drying out (dying) when left with negative wetness, turns into husk
         if (parents.A.wetness <= 0) {
@@ -288,6 +323,8 @@ function addRandomGenny(){
   gennies.push(newGenny);
   
   screen.emit("newGenny", newGenny);
+  vibe.emit("newGenny", newGenny);
+  // io.emit("newGenny", newGenny);
 
   // console.log('new random Genny');
 }
