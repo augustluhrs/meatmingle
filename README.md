@@ -253,8 +253,10 @@ __________________
   - test Ableton sync
 - misc
   - new background
+    - add something fun to the right edge since they all get stuck there
   - new genny assets
   - genny asset on mobile
+  - random line on mobile from genny mutation list
   - emojis for lube
   - test optimization
   - check middleware for protecting server

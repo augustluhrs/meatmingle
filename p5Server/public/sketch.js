@@ -138,18 +138,14 @@ function setup(){
 
     yesDiv = createDiv("").id("yesDiv").class("divs").position(0, 7 * height/10).size(width/2, height/10);
     yesButton = createButton("YES").class("buttons").parent("yesDiv").size(width/7, height/14).mousePressed(() => {
-        // genny.name = nameInput.value();
         genny.poem = poemInput.value();
-
-        //reset sizes? hmm....
-        // delete genny.bodyLength;
-        // delete genny.bodyWidth;
-        // delete genny.frontFinSize;
-        // delete genny.backFinSize;
-        // delete genny.position;
         
+        //need to limit poem length and/or sanitize
+        if (genny.poem.split(" ").length > 12 || genny.poem.length > 100) {
+          genny.poem = "I wrote a poem that was too long"; //lol test
+        } 
+
         socket.emit("makeGenny", genny);
-        // nameInput.hide();
         poemInput.hide();
         yesButton.hide();
         noButton.hide();
@@ -170,7 +166,7 @@ function setup(){
 
     //css font-size
     let inputs = document.getElementsByClassName('inputs');
-    let classText = (width/50).toString() + "px";
+    let classText = (width/30).toString() + "px";
     for (let input of inputs) {
       input.style.fontSize = classText;
     }

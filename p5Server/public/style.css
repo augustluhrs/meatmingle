@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'fugaz';
+  src: url('assets/fonts/fugaz.ttf') format('truetype');
+}
+
 body {
   margin: 0px;
 /*   disable scrolling, only issue is refresh... https://discourse.processing.org/t/disable-scrolling-on-mobile/20719/2 */
@@ -55,7 +60,14 @@ body {
 .poemBlock {
   /* display: flexbox; */
   width: 100%;
+  /* border-color: black; */
+  font-family: "fugaz";
   padding: 10px;
+  margin-bottom: 10px;
+  border: 6px solid #f48b8b; /* Chunky border */
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* Shadow */
+  background-color: #9ad4fb; /* Background color */
+
 }
 
 

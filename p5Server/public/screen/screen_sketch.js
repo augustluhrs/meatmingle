@@ -17,7 +17,7 @@ socket.on('changeSettings', (data)=>{
 });
 
 socket.on('newGenny', (data) => {  
-    console.log("new genny on screen: " + data.id);
+    // console.log("new genny on screen: " + data.id);
     //image tint performance hack
     // https://github.com/processing/p5.js/issues/3610
     // https://editor.p5js.org/micuat/sketches/S82r42HqN    
@@ -423,6 +423,10 @@ function testVoiceLoop(){
 
 //for adding to queue panel
 function addPoemBlock(poem, id){
-    poemBlocks.push(createDiv(poem).class(`poemBlock ${id}`).parent("panel"));
+    // let newBlock = createDiv(poem).class(`poemBlock ${id}`).parent("panel");
+    let newBlock = createDiv(poem).class(`poemBlock`).parent("panel");
+    newBlock.setAttribute('data-id', id);
+
+    poemBlocks.push(newBlock);
 }
 

@@ -14,12 +14,12 @@ const options = {
   minLubeEfficiency: 0.8,
   maxLubeEfficiency: 5,
   maxWetness: 500, //upper range of dryness value
-  mutationRate: 0.3,
+  mutationRate: 0.08,
   lubeTimer: 500,
   lubeSize: 100,
   dryRate: 1000, //how fast everyone dries out
   //no matetimer b/c that comes from refractory?
-  lubeEmojis: ['💦', '💦', '💦', '💦', '🍆', '🍑', '🧴', '🧴', '🧴']
+  lubeEmojis: ['💦', '💦', '💦', '💦', '🧴', '🧴', '🧴'] //'🍆', '🍑'
 }
 
 // const ecoWidth = 1920;

@@ -95,22 +95,26 @@ class Genny {
       let poemA = parentA.poem.split(" ");
       let poemB = parentB.poem.split(" ");
 
-      this.poem = "this line of poetry is far far far far far too long"
-      while (this.poem.split(" ").length >= 12) { //dumb, i know. TODO replace with syllable count
+      // this.poem = "this line of poetry is far far far far far too long"
+      // while (this.poem.split(" ").length >= 12) { //dumb, i know. TODO replace with syllable count
+      let iDontKnowHowToCode = true;
+      let crossoverSyllables = 1;
+      while(iDontKnowHowToCode || !(crossoverSyllables % 2 == 0 || (crossoverSyllables >= 7 || crossoverSyllables <= 9))) { //don't judge me  
+        iDontKnowHowToCode = false;
         let splitA = Math.min(Math.max(1, Math.floor(Math.random() * poemA.length)), poemA.length);
         let splitB = Math.min(Math.max(1, Math.floor(Math.random() * poemB.length)), poemB.length);
         // console.log(splitA);
         // console.log(splitB);
-
-        // let stringWithoutCommas = stringWithCommas.replace(/,/g, '');
         let firstHalf = poemA.slice(0, splitA);
-        // console.log(firstHalf);
         let secondHalf = poemB.slice(splitB);
+        // console.log(firstHalf);
         // console.log(secondHalf);
         this.poem = [firstHalf, secondHalf].join(" ");
         this.poem = this.poem.replace(punctuationRegex, " ");
-        // this.poem.replace(/,/g, ' ');
-
+        crossoverSyllables = 0;
+        for (let word of this.poem) {
+          crossoverSyllables += Beats.countSyllablesInWord(word);
+        }
       }
       
    
@@ -290,7 +294,7 @@ class Genny {
     //triggered death on mating when left with negative wetness, turns into husk
   // }
 
-  display(){
+  display() {
     let pos = {x: this.pos.x, y: this.pos.y};
     return {pos: pos, genny: this}; //hmm....
   }
@@ -323,7 +327,33 @@ let mutationWords = [
   "ass",
   "bussy",
   "thussy",
-  "throat"
+  "throat",
+  // "pussy",
+  // "tits",
+  // "whore",
+  "horse",
+  "gristle",
+  "bits",
+  "balls",
+  "pulse",
+  "throb",
+  // "member",
+  // "flower",
+  "horseboy",
+  "clit",
+  "flaps",
+  "silicone",
+  "beef",
+  "sausage",
+  "cream",
+  "bible",
+  "zaddy",
+  "holy",
+  "naughty",
+  "slick",
+  // "kneel",
+  "down",
+
 ]
 
 module.exports = Genny;
