@@ -4,7 +4,7 @@
   "main": "server.js",
   "repository": "git@github.com:augustluhrs/meatmingle.git",
   "author": "August Luhrs <augustluhrs@gmail.com>",
-  "license": "CC-BY-NC",
+  "license": "CC-BY-NC-SA-2.5",
   "private": false,
   "engines": {
     "node": ">=16"
