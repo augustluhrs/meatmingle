@@ -47,7 +47,8 @@ A generative poetry ecosystem where participants create genital critters, "genni
 
 ### Assets
 
-- [body blob 1](https://www.pinclipart.com/maxpin/ibJxoTm/)
+- [pillow background via stable diffusion](https://stablediffusionweb.com/app/image-generator)
+- [hair clip art]() -- i forgot where i'm sorry -_-
 
 ## License
 

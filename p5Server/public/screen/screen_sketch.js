@@ -145,8 +145,10 @@ let globalWetnessDiv, globalWetnessButton;
 let images = {
     body: [],
     zones: [],
-    hair: []
+    hair: [],
+    background: [],
 }
+// let bg; //image
 let bgHue = 0;
 // let count = 0;
 let wet = 0;
@@ -157,7 +159,8 @@ let poemBlocks = []; //storing so can remove all when genny dies (unless protect
 
 function preload(){
     // font = loadFont("../assets/fonts/fugaz.ttf");
-    images.body.push(loadImage("../assets/body/blob1.png"));
+    // images.body.push(loadImage("../assets/body/blob1.png"));
+    images.background.push(loadImage("../assets/background/pillows4_light.jpeg"));
     images.hair.push(loadImage("../assets/hair/longHair.png"));
 }
 
@@ -184,9 +187,10 @@ function setup(){
     noStroke();
 
     //asset resize
-    images.body[0].resize(100, 100); //blob1
+    // images.body[0].resize(100, 100); //blob1
     images.hair[0].resize(100, 0); //long hair
     images.hair[0].filter(INVERT);
+    images.background[0].resize(1080, 1080);
 
     //for face emojis
     // textSize(width/40);
@@ -235,8 +239,9 @@ function setup(){
 
 function draw(){
     // image(water, 0, 0, windowWidth, windowHeight);
+    image(images.background[0], width/2, height/2, width, height);
     // background(250, 20, 50);
-    background(bgHue, 50, 80);
+    // background(bgHue, 50, 80);
     // fill(255);
     // ellipse(0, 0, 300);
 
