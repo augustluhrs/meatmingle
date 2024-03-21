@@ -122,6 +122,14 @@ function setup(){
       event.target.value = '';
       event.target.removeEventListener('focus', arguments.callee)
     })
+    poemInput.changed(()=>{
+      if (poemInput.value().length > 12 || poemInput.value() < 2) {
+        poemInput.style('background-color', '#ee2222');
+      } else {
+        poemInput.style('background-color', '#6c702d');
+
+      }
+    })
 
     statsDiv = createDiv("").id("statsDiv").class("divs").position(0, 9 * height/10).size(width/3, height/10);
     statsButton = createButton("personality").class("buttons").mousePressed(() => {

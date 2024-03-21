@@ -100,9 +100,11 @@ class Genny {
       // this.poem = "this line of poetry is far far far far far too long"
       // while (this.poem.split(" ").length >= 12) { //dumb, i know. TODO replace with syllable count
       let iDontKnowHowToCode = true;
-      let crossoverSyllables = 1;
-      while(iDontKnowHowToCode || !(crossoverSyllables % 2 == 0 || (crossoverSyllables >= 7 || crossoverSyllables <= 9))) { //don't judge me  
-        iDontKnowHowToCode = false;
+      // let crossoverSyllables = 1;
+      let wordCount = 14; //changing to this 
+      // while(iDontKnowHowToCode || !(crossoverSyllables % 2 == 0 || (crossoverSyllables >= 7 || crossoverSyllables <= 9))) { //don't judge me  
+      while(wordCount > 12 || wordCount < 3) {
+        // iDontKnowHowToCode = false;
         let splitA = Math.min(Math.max(1, Math.floor(Math.random() * poemA.length)), poemA.length);
         let splitB = Math.min(Math.max(1, Math.floor(Math.random() * poemB.length)), poemB.length);
         // console.log(splitA);
@@ -113,10 +115,12 @@ class Genny {
         // console.log(secondHalf);
         this.poem = [firstHalf, secondHalf].join(" ");
         this.poem = this.poem.replace(punctuationRegex, " ");
-        crossoverSyllables = 0;
-        for (let word of this.poem) {
-          crossoverSyllables += Beats.countSyllablesInWord(word);
-        }
+
+        wordCount = this.poem.split(" ").length;
+        // crossoverSyllables = 0;
+        // for (let word of this.poem) {
+        //   crossoverSyllables += Beats.countSyllablesInWord(word);
+        // }
       }
       
    

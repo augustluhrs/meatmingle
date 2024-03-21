@@ -26,6 +26,7 @@ function splitPoemForBar(poem){
   let poemSplit = poem.split(" ");
   let poemSyllables = [];
   let syllables = 0;
+  let words = 0;
 
   //take four equal chunks by syllable count
   for (let word of poemSplit) {
@@ -35,6 +36,7 @@ function splitPoemForBar(poem){
     };
     let count = countSyllablesInWord(word);
     syllables += count;
+    words++;
     /*
     let phones = Pron.phonesForWord(word);
     let count = 1;
@@ -49,31 +51,42 @@ function splitPoemForBar(poem){
     poemSyllables.push(poemSyllableObj);
   }
   // console.log("syllable split");
-  // console.log(`syllables: ${syllables}` );
-  // console.log(poemSyllables);
+  console.log(`syllables: ${syllables}` );
+  console.log(poemSyllables);
 
   //need to have a syllable tally while going through array, add once reaches limit, rest in last element
   let targetNumSyllables = syllables / beats; //avg num of syllables per beat
-
+  let targetNumWords = words / beats;
+  // console.log(poemSyllables)
   while (poemSyllables.length > 0) {
     let tally = 0;
     // let beat = 1; //not starting at 0 >.<
     let poemBeat = [];
-    let notSkippingWord = true;
+    // let notSkippingWord = true;
 
-    while (((tally < targetNumSyllables || poemBeats.length == 3) && poemSyllables.length > 0) && notSkippingWord) {
+    // while (((tally < targetNumSyllables || poemBeats.length == 3) && poemSyllables.length > 0) && notSkippingWord) {
+    while (tally < targetNumWords) { //ugh
       //if under syllable count for this section or if last section, and there are still words to add
+      tally++;
 
-      let nextWord = poemSyllables[0];
-      if (tally + nextWord.syllables >= targetNumSyllables * 2 && poemBeats.length < beats - 1) {
-        //trying to distribute words more evenly since multisyllable words coming after monosyllable words can skew to a front-loaded bar
-        // continue;
-        notSkippingWord = false;
-      } else {
-        tally += nextWord.syllables;
-        poemBeat.push(nextWord.word);
+      // let nextWord = poemSyllables[0];
+
+      if (poemSyllables.length != 0) { //help me
+        // console.log(poemSyllables[0]);
+        poemBeat.push(poemSyllables[0].word);
         poemSyllables.splice(0, 1);
       }
+
+      // let nextWord = poemSyllables[0];
+      // if (tally + nextWord.syllables >= targetNumSyllables * 2 && poemBeats.length < beats - 1) {
+        //trying to distribute words more evenly since multisyllable words coming after monosyllable words can skew to a front-loaded bar
+        // // continue;
+        // notSkippingWord = false;
+      // } else {
+        // tally += nextWord.syllables;
+        // poemBeat.push(nextWord.word);
+        // poemSyllables.splice(0, 1);
+      // }
     
     }
     // console.log(poemSyllables);
@@ -92,7 +105,7 @@ function splitPoemForBar(poem){
     }
   }
 
-  console.log("poemBeats");
+  // console.log("poemBeats");
   console.log(poemBeats);
   return poemBeats; //gets added to queue as array of four mini poems
 }
