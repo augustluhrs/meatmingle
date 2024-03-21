@@ -61,7 +61,10 @@ socket.on('newGenny', (data) => {
     // }
 
     //add poem beats to queue 
+    // console.log(poemQ);
     poemQ.push({poem: genny.poem, id: genny.id, beats: genny.beats, isActive: false, diedMidLine: false});
+    console.log(poemQ);
+   
     // addPoemBlock(genny.poem, genny.id);
 
     addPoemDiv(genny, false);
@@ -115,6 +118,61 @@ socket.on('update', (data) => {
 });
 
 //
+// TONE.JS
+//
+
+//create a synth and connect it to the main output (your speakers)
+const synth = new Tone.Synth().toDestination();
+let bpm = 126;
+let gain = 0.1;
+
+const synths = [
+    new Tone.Synth().toDestination(),
+    new Tone.Synth().toDestination(),
+    new Tone.Synth().toDestination(),
+    new Tone.Synth().toDestination(),
+];
+
+synths[0].oscillator.type = 'square';
+synths[1].oscillator.type = 'sine';
+synths[2].oscillator.type = 'sawtooth';
+synths[3].oscillator.type = 'triangle';
+ 
+
+
+tg = new Tone.Gain(gain);
+tg.toMaster();
+for (let synth of synths){
+    synth.connect(tg);
+}
+
+
+
+const sampler = new Tone.Sampler({
+    urls: { //kick, hihat, snare
+        A1: "../assets/samples/BD.wav",
+        // A2: "drum-samples/Kit8/hihat.wav",
+        // A3: "https://tonejs.github.io/audio/drum-samples/Kit8/snare.wav",
+    },
+    // baseUrl: "https://tonejs.github.io/audio/",
+    onload: () => {
+        // sampler.triggerAttackRelease(["C1", "E1", "G1", "B1"], 0.5);
+        const drumLoopA = new Tone.Loop(time => {
+            sampler.triggerAttackRelease("A2", "8n", time);
+        }, "4n").start(0);
+    }
+}).toDestination();
+// connect the player to the feedback delay and filter in parallel
+const filter = new Tone.Filter(400, 'lowpass').toDestination();
+sampler.connect(filter);
+
+
+
+
+
+//  synths.forEach(synth => synth.connect(gain));
+
+//
 // SETUP AND VARIABLES
 //
 
@@ -132,14 +190,14 @@ let speech;
 let isSpeechLoaded = false; //silly but w/e, it's legible
 let beatInterval = 0;
 let prevTime = 0;
-let beat = 0;
+// let beat = 0;
 let isPaused = false;
 let poemQ = []; //stores the lines to be read on beat, {id, beats}, recycles last two
 
 //ui/display
 let font;
 let canvas;
-let randomGennyButton, pauseButton, resumeButton, clearLubeButton; //buttons
+let randomGennyButton, pauseButton, resumeButton, clearLubeButton, startLoopButton, stopLoopButton; //buttons
 let muteCheckbox; //checkboxes
 let globalWetnessDiv, globalWetnessButton;
 let images = {
@@ -211,7 +269,78 @@ function setup(){
         socket.emit("clearLube");
     });
     muteCheckbox = createCheckbox("mute voice", true).class("buttons").parent("controls");
+    startLoopButton = createButton("startLoop").class("buttons").parent("controls").id("startLoopButton").mousePressed(() => {
+        // Tone.start();
+    });
+    stopLoopButton = createButton("stopLoop").class("buttons").parent("controls").mousePressed(() => {
+        Tone.Transport.stop();
+        
+    });
+    
+    document.getElementById('startLoopButton')?.addEventListener('click', async () => {
+        await Tone.start()
+        console.log('audio is ready');
 
+        // const synths = [
+        //     new Tone.Synth().toDestination(),
+        //     new Tone.Synth().toDestination(),
+        //     new Tone.Synth().toDestination(),
+        //     new Tone.Synth().toDestination(),
+        // ];
+        
+        // synths[0].oscillator.type = 'square';
+        // synths[1].oscillator.type = 'sine';
+        // synths[2].oscillator.type = 'sawtooth';
+        // synths[3].oscillator.type = 'triangle';
+         
+        
+
+        // tg = new Tone.Gain(gain);
+        // tg.toMaster();
+        // for (let synth of synths){
+        //     synth.connect(tg);
+        // }
+        
+        
+
+        // const sampler = new Tone.Sampler({
+        //     urls: { //kick, hihat, snare
+        //         A1: "../assets/samples/BD.wav",
+        //         // A2: "drum-samples/Kit8/hihat.wav",
+        //         // A3: "https://tonejs.github.io/audio/drum-samples/Kit8/snare.wav",
+        //     },
+        //     // baseUrl: "https://tonejs.github.io/audio/",
+        //     onload: () => {
+        //         // sampler.triggerAttackRelease(["C1", "E1", "G1", "B1"], 0.5);
+        //         const drumLoopA = new Tone.Loop(time => {
+        //             sampler.triggerAttackRelease("A2", "8n", time);
+        //         }, "4n").start(0);
+        //     }
+        // }).toDestination();
+        // // connect the player to the feedback delay and filter in parallel
+        // const filter = new Tone.Filter(400, 'lowpass').toDestination();
+        // sampler.connect(filter);
+        
+         // create two monophonic synths
+//  const synthA = new Tone.FMSynth().toDestination();
+//  const synthB = new Tone.AMSynth().toDestination();
+//  //play a note every quarter-note
+//  const loopA = new Tone.Loop(time => {
+//      synthA.triggerAttackRelease("C2", "8n", time);
+//  }, "4n").start(0);
+//  //play another note every off quarter-note, by starting it "8n"
+//  const loopB = new Tone.Loop(time => {
+//      synthB.triggerAttackRelease("C4", "8n", time);
+//  }, "4n").start("8n");
+       
+        Tone.Transport.scheduleRepeat(beatLoop, '8n');
+
+        // the loops start when the Transport is started
+        Tone.Transport.start();
+        // ramp up to 800 bpm over 10 seconds
+        Tone.Transport.bpm.rampTo(bpm, 4);
+    });
+    // console.log(document.getElementById('startLoopButton'));
     // globalWetnessDiv = createDiv().parent("controls");
     globalWetnessButton = createDiv().class("buttons").parent("controls");
 
@@ -275,8 +404,8 @@ function draw(){
     // testVoiceLoop();
     if (isSpeechLoaded && poemQ.length > 0 && !isPaused) {
         speech.setVolume((muteCheckbox.checked()) ? 0.0 : 1.0);
-        beatLoop();
-    }
+        // beatLoop();
+    } 
 
     //bpm check
     // text(runningBPM, 10, 10);
@@ -394,11 +523,89 @@ let runningBPM = 0;
 let beatsElapsed = 0;
 let minutesElapsed = 0;
 let lastMinute = 0;
+let iDontKnowTone = 0;
+let beat = 1;
+function beatLoop(time) { //new Tone version
+    iDontKnowTone++;
+    if (iDontKnowTone % 8 == 0) {
+        console.log(poemQ[0]);
+        // synths[2].triggerAttackRelease("C4", "8n");
+
+        // console.log(poemQ);
+        // if (poemQ.length < 2) {
+        if (beat == 1) {
+
+            // will only happen once per bar since by definition adding will increase length
+            // poemQ.push(poemQ[0].slice());
+            poemQ.push(structuredClone(poemQ[0]));
+        }
+
+        //now adding the line to end of queue no matter what, since will get removed on drying out
+        // if (!poemQ[0].isActive) {
+        //     poemQ.push(structuredClone(poemQ[0]));
+        //     poemQ[0].isActive = true;
+        //     // addPoemBlock(poemQ[0].poem, poemQ[0].id); //seems dumb to create two separate things, might get unlinked
+        // } 
+
+        speech.speak(poemQ[0].beats[0]);
+        // speech.speak("meat");
+
+        poemQ[0].beats.splice(0, 1); //remove the beat that was just spoken
+        // if (poemQ[0].beats.length < 1) {
+            //remove the karaoke block at the top (should be matching id...)
+            //but only if genny is still alive, or else will throw error
+            // if (!poemQ[0].diedMidLine) {
+                // let topBlock = document.querySelector(`#panel .${poemQ[0].id}:first-child`);
+                // console.log(document.querySelector(`#panel .${poemQ[0].id}:first-child`));
+                // let topBlock = document.querySelector(`#panel :first-child`); //chat gpt for the query
+                // console.log(document.getElementById('panel').children);
+                // if (topBlock != null) {
+                //     topBlock.remove();
+                // } else {
+                //     console.log("wtf is happening");
+                    //should just refresh lol.
+                    // window.location.reload();
+                    // updates = {
+                    //     gennies: [],
+                    //     lubeLocations: [],
+                    //     husks: [],
+                    //     newHusks: [],
+                    // };
+                    // poemQ = [];
+                    // for (let child of document.getElementById('panel').children) {
+                    //     child.remove();
+                    // }
+                    // socket.emit("getEcosystem"); //reset????
+                    // console.log(poemQ[0]);
+                    // console.log(document.getElementById('panel').firstChild);
+                // } 
+            // }
+
+            //remove line after last beat is spoken
+            poemQ.splice(0, 1);
+         
+        
+        if (beat == 4) {
+            //new bar
+            console.log("bar");
+            // prevBar = prevTime;
+            beat = 1;
+            // bgHue += 360/8;
+        } else {
+            beat++;
+        }
+
+    }
+}
+/*
 function beatLoop() { //auto from poemQ
     let currentTime = millis();
     if (currentTime - prevTime >= beatInterval) { //hmm will this actually be on beat or will it depend on loop/browswer?
         prevTime = currentTime;
         beat++;
+
+        //play a middle 'C' for the duration of an 8th note
+        // synth.triggerAttackRelease("C4", "8n");
 
         // console.log(poemQ);
         // if (poemQ.length < 2) {
@@ -467,17 +674,18 @@ function beatLoop() { //auto from poemQ
         globalWetnessButton.html(globalWetnessAvg/100);
 
         //trying a dumb bpm check to see if i can sync ableton
-        /*
-        beatsElapsed++;
-        if (currentTime - lastMinute >= 60000) {
-            lastMinute += 60000;
-            minutesElapsed++;
-            runningBPM = Math.fround(beatsElapsed / minutesElapsed);
-            console.log(`beats: ${beatsElapsed}, mins: ${minutesElapsed}`);
-        }
-        */
+        
+        // beatsElapsed++;
+        // if (currentTime - lastMinute >= 60000) {
+        //     lastMinute += 60000;
+        //     minutesElapsed++;
+        //     runningBPM = Math.fround(beatsElapsed / minutesElapsed);
+        //     console.log(`beats: ${beatsElapsed}, mins: ${minutesElapsed}`);
+        // }
+        
     }
 }
+*/
 
 // let prevTime = 0;
 let interval = 1905; //126 bpm (MAMI) = 2.1 per second, so each 4 beat bar is ~1905ms
