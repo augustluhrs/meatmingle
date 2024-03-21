@@ -62,7 +62,7 @@ socket.on('newGenny', (data) => {
 
     //add poem beats to queue 
     poemQ.push({poem: genny.poem, id: genny.id, beats: genny.beats, isActive: false, diedMidLine: false});
-    addPoemBlock(genny.poem, genny.id);
+    // addPoemBlock(genny.poem, genny.id);
 
     addPoemDiv(genny, false);
 });
@@ -141,12 +141,16 @@ let font;
 let canvas;
 let randomGennyButton, pauseButton, resumeButton, clearLubeButton; //buttons
 let muteCheckbox; //checkboxes
+let globalWetnessDiv, globalWetnessButton;
 let images = {
     body: [],
     zones: [],
     hair: []
 }
 let bgHue = 0;
+// let count = 0;
+let wet = 0;
+let globalWetnessAvg = 0;
 
 //queue poem blocks
 let poemBlocks = []; //storing so can remove all when genny dies (unless protected)
@@ -204,7 +208,9 @@ function setup(){
     });
     muteCheckbox = createCheckbox("mute voice", true).class("buttons").parent("controls");
 
-    // createDiv("this is a test line of poetry").class("poemDiv").parent("poem");
+    // globalWetnessDiv = createDiv().parent("controls");
+    globalWetnessButton = createDiv().class("buttons").parent("controls");
+
     // let e = createDiv("tasdfasdfasdfasdfsdf asddffasdf ry").class("poemDiv").parent("poem");
     // e.style('background', 'linear-gradient(to right, #ffffff, #000000)');
 
@@ -269,6 +275,8 @@ function draw(){
 
     //bpm check
     // text(runningBPM, 10, 10);
+
+    
 }
 
 function showGenny(gennyData){
@@ -283,7 +291,7 @@ function showGenny(gennyData){
     if (abs(rot) > PI) {
         needsFlip = true; //TODO
     }
-    rotate(rot);
+    // rotate(rot);
 
     // console.log(genny.colors);
     
@@ -397,7 +405,7 @@ function beatLoop() { //auto from poemQ
         if (!poemQ[0].isActive) {
             poemQ.push(structuredClone(poemQ[0]));
             poemQ[0].isActive = true;
-            addPoemBlock(poemQ[0].poem, poemQ[0].id); //seems dumb to create two separate things, might get unlinked
+            // addPoemBlock(poemQ[0].poem, poemQ[0].id); //seems dumb to create two separate things, might get unlinked
         } 
 
         speech.speak(poemQ[0].beats[0]);
@@ -445,6 +453,14 @@ function beatLoop() { //auto from poemQ
             bgHue += 360/8;
         }
 
+        //global wetness check
+        wet = 0;
+        for (let genny of updates.gennies) {
+            wet += genny.genny.wetness;
+        }
+        globalWetnessAvg = Math.round((wet / updates.gennies.length)*100);
+        globalWetnessButton.html(globalWetnessAvg/100);
+
         //trying a dumb bpm check to see if i can sync ableton
         /*
         beatsElapsed++;
@@ -488,6 +504,7 @@ let generationColors = [
     "#85a403", //olive
     "#f1cb3c", //gold
 ]
+
 function addPoemDiv(genny, isHusk) {
     //removes/adds to karaoke queue unless husk, then removes from queue and adds to poem
     let newDiv = createDiv(genny.poem).class('poemDiv').parent('poem').id(genny.id);

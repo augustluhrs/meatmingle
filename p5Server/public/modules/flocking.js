@@ -33,7 +33,7 @@ class Boid {
         //first adjust biases if not ready to mate
         this.separationBias = (self.isTooDry) ? 20 : 1;
         this.cohesionBias = (self.isHorny) ? 5 : 1;
-        this.alignmentBias = (self.isReadyToMate) ? 10: 1.5;
+        this.alignmentBias = (self.isReadyToMate) ? 10: 5;
 
         let surroundings = this.lookAround(self, gennies, lubeLocations);
         this.flock(surroundings.neighbors);

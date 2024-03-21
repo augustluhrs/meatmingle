@@ -31,6 +31,11 @@ A generative poetry ecosystem where participants create genital critters, "genni
 
 ## Credits
 
+### subconscious references
+
+- [Robert Yang](https://radiatoryang.itch.io/)'s games, especially *"We Dwell in Possibility"*
+- [adrienne maree brown](https://adriennemareebrown.net/)'s books *Emergent Strategy* and *Pleasure Activism*
+
 ### p5 client/server
 
 - glitch hosting

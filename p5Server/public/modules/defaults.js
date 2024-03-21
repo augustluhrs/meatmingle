@@ -11,13 +11,13 @@ const options = {
   maxInheritance: .85,
   minLubeToMate: 50, //now making this global so prepared makes more sense
   // maxLubeToMate: 50,
-  minLubeEfficiency: 0.8,
-  maxLubeEfficiency: 5,
+  minLubeEfficiency: 0.5,
+  maxLubeEfficiency: 1.5,
   maxWetness: 500, //upper range of dryness value
   mutationRate: 0.08,
   lubeTimer: 500,
   lubeSize: 100,
-  dryRate: 1000, //how fast everyone dries out
+  dryRate: 200, //how fast everyone dries out
   //no matetimer b/c that comes from refractory?
   lubeEmojis: ['💦', '💦', '💦', '💦', '🧴', '🧴', '🧴'] //'🍆', '🍑'
 }

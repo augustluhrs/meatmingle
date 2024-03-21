@@ -49,7 +49,7 @@ function splitPoemForBar(poem){
     poemSyllables.push(poemSyllableObj);
   }
   // console.log("syllable split");
-  console.log(`syllables: ${syllables}` );
+  // console.log(`syllables: ${syllables}` );
   // console.log(poemSyllables);
 
   //need to have a syllable tally while going through array, add once reaches limit, rest in last element
@@ -76,7 +76,7 @@ function splitPoemForBar(poem){
       }
     
     }
-    console.log(poemSyllables);
+    // console.log(poemSyllables);
     let fullBeat = poemBeat.join(" ");
     fullBeat.replace(punctuationRegex, " ");
     poemBeats.push(fullBeat);

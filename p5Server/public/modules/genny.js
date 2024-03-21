@@ -72,7 +72,7 @@ class Genny {
         this.maxSpeed,
         this.refractoryPeriod,
         this.childInheritance,
-        this.minLubeToMate
+        this.lubeEfficiency
       ];
     } else {  //new baby
       this.id = D.generateID();
@@ -268,7 +268,7 @@ class Genny {
     // console.log(this);
 
     //testing syllable count
-    console.log("\n\nsyllable count for: " + this.poem + "\n");
+    // console.log("\n\nsyllable count for: " + this.poem + "\n");
     let syllables = 0;
     for (let word of this.poem.split(" ")) {
       // console.log("num phones per word: " + Pron.phonesForWord(word).length);
@@ -281,7 +281,7 @@ class Genny {
         syllables++; //hmm
       }
     }
-    console.log(syllables + "\n");
+    // console.log(syllables + "\n");
 
     // split poem into four beats per bar
     this.beats = Beats.splitPoemForBar(this.poem);
@@ -292,7 +292,7 @@ class Genny {
 
     //tick down the lube timer and subtract if needed
     this.lubeTimer ++; //need deltaTime?
-    if (this.lubeTimer >= D.dryRate) {
+    if (this.lubeTimer >= D.options.dryRate) {
       this.lubeTimer = 0;
       this.wetness --;
     }
@@ -328,6 +328,7 @@ let mutationWords = [
   "wordhack",
   "wonderville",
   "brooklyn",
+  "todd",
   "art",
   "poem",
   "theythem",
@@ -372,9 +373,9 @@ let mutationWords = [
   "beef",
   "sausage",
   "cream",
-  "bible",
+  // "bible",
   "zaddy",
-  "holy",
+  // "holy",
   "naughty",
   "slick",
   // "kneel",
