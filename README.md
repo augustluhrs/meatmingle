@@ -13,11 +13,12 @@ A generative poetry ecosystem where participants create genital critters, "genni
 
 - Sara Dee
 - Todd Anderson
+- Duncan Figurski
+- Julia && Heather
 - Dan Shiffman
 - Harry Macinnis
 - Tiri Kananuruk
 - Allison Parrish
-- Duncan Figurski
 - Dave Currie
 - Marcel Truxillo
 - Schuyler DeVos
