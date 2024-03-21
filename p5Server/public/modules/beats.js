@@ -1,7 +1,8 @@
 //beat bar for speech timing
 
 //pronouncing for beat bar function
-const Pron = require('pronouncing');
+// const Pron = require('pronouncing');
+const Pron = require('../libraries/pronouncing');
 const punctuationRegex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
 
 let beats = 4;

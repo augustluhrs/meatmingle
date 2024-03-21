@@ -201,7 +201,7 @@ function setup(){
     clearLubeButton = createButton("clearLube").class("buttons").mousePressed(() => {
         socket.emit("clearLube");
     });
-    muteCheckbox = createCheckbox("mute voice", false).class('buttons');
+    muteCheckbox = createCheckbox("mute voice", true).class('buttons');
 
 
 

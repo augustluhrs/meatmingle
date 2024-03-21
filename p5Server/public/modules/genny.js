@@ -3,7 +3,8 @@ const Victor = require("victor");
 const lerp = require("lerp");
 const D = require("./defaults");
 const Boid = require("./flocking");
-const Pron = require('pronouncing'); //lol
+// const Pron = require('pronouncing'); //lol
+const Pron = require('../libraries/pronouncing');
 const Beats = require("./beats");
 
 
