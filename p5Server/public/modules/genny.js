@@ -34,6 +34,7 @@ class Genny {
     if (source == "client") {
       this.id = data.id;
       this.poem = data.poem;
+      this.generations = [0, 0];
 
       //obscenity censor
       // console.log(this.poem);
@@ -57,7 +58,7 @@ class Genny {
       this.refractoryPeriod = D.map(data.prolific, 0, 16, 0, 1); 
       this.childInheritance = D.map(data.generous, 0, 16, 0, 1); 
       this.lubeEfficiency = D.map(data.prepared, 0, 16, 0, 1);
-      this.minLubeToMate = D.options.minLubeToMate;
+      // this.minLubeToMate = D.options.minLubeToMate;
 
       // this.radius = D.map(data.generous, 0, 16, D.options.minRadius, D.options.maxRadius);
       this.radius = D.map(data.generous, 0, 16, 0, 1);
@@ -82,7 +83,7 @@ class Genny {
       this.wetness = data.inheritance;
       // this.DNA = new DNA()
       this.genes = []; //don't need to fill with dummy data?
-
+      this.generations = [Math.max(parentA.generations[0], parentA.generations[1]) + 1, Math.max(parentB.generations[0], parentB.generations[1]) + 1]
 
       // console.log("\nnew baby from :")
       // console.log(parentA.id);
@@ -246,6 +247,7 @@ class Genny {
     this.childInheritance = D.map(this.genes[5], 0, 1, D.options.minInheritance, D.options.maxInheritance);
     this.lubeEfficiency = D.map(this.genes[6], 0, 1, D.options.minLubeEfficiency, D.options.maxLubeEfficiency)
     // this.minLubeToMate = D.map(this.genes[6], 0, 1, D.options.minLubeToMate, D.options.maxLubeToMate);
+    this.minLubeToMate = D.options.minLubeToMate;
 
     this.direction = 0;
     //timers

@@ -56,14 +56,15 @@ socket.on('newGenny', (data) => {
     // console.log("new gennyLooks", c);
     
     //testing speech on creation
-    if (isSpeechLoaded) {
+    // if (isSpeechLoaded) {
         // speech.speak(genny.poem);
-    }
+    // }
 
     //add poem beats to queue 
     poemQ.push({poem: genny.poem, id: genny.id, beats: genny.beats, isActive: false, diedMidLine: false});
     addPoemBlock(genny.poem, genny.id);
 
+    addPoemDiv(genny, false);
 });
 
 socket.on('update', (data) => {
@@ -187,21 +188,25 @@ function setup(){
     // textSize(width/40);
     
     //UI
-    randomGennyButton = createButton("RANDOM GENNY").class("buttons").mousePressed(() => {socket.emit("makeRandomGenny")});
-    pauseButton = createButton("pause").class("buttons").mousePressed(() => {
+    randomGennyButton = createButton("RANDOM GENNY").class("buttons").parent("controls").mousePressed(() => {socket.emit("makeRandomGenny")});
+    pauseButton = createButton("pause").class("buttons").parent("controls").mousePressed(() => {
         socket.emit("pause");
         isPaused = true;
         speech.pause();
     });
-    resumeButton = createButton("resume").class("buttons").mousePressed(() => {
+    resumeButton = createButton("resume").class("buttons").parent("controls").mousePressed(() => {
         socket.emit("resume");
         isPaused = false;
         speech.resume();
     });
-    clearLubeButton = createButton("clearLube").class("buttons").mousePressed(() => {
+    clearLubeButton = createButton("clearLube").class("buttons").parent("controls").mousePressed(() => {
         socket.emit("clearLube");
     });
-    muteCheckbox = createCheckbox("mute voice", true).class('buttons');
+    muteCheckbox = createCheckbox("mute voice", true).class("buttons").parent("controls");
+
+    // createDiv("this is a test line of poetry").class("poemDiv").parent("poem");
+    // let e = createDiv("tasdfasdfasdfasdfsdf asddffasdf ry").class("poemDiv").parent("poem");
+    // e.style('background', 'linear-gradient(to right, #ffffff, #000000)');
 
 
 
@@ -472,3 +477,27 @@ function addPoemBlock(poem, id){
     poemBlocks.push(newBlock);
 }
 
+let generationColors = [
+    "#f0c5c4", //pale pink
+    "#f47cdb", //fuschia
+    "#b07cf4", //lavender
+    "#7c9ff4", //cornflower
+    "#7cf4f1", //cyan
+    "#50feac", //mint
+    "#6cb530", //apple
+    "#85a403", //olive
+    "#f1cb3c", //gold
+]
+function addPoemDiv(genny, isHusk) {
+    //removes/adds to karaoke queue unless husk, then removes from queue and adds to poem
+    let newDiv = createDiv(genny.poem).class('poemDiv').parent('poem').id(genny.id);
+    // rn limiting to max color 9 generations
+    // console.log(genny.generations);
+
+    genny.generations[0] = Math.min(genny.generations[0], generationColors.length - 1);
+    genny.generations[1] = Math.min(genny.generations[1], generationColors.length - 1);
+
+    // console.log(genny.generations);
+    document.getElementById(genny.id).style.backgroundImage = `linear-gradient(to right, ${generationColors[genny.generations[0]]}, ${generationColors[genny.generations[1]]})`;
+    // newDiv.style('background', `linear-gradient(to right, ${generationColors[genny.generations[0]]}, ${generationColors[genny.generations[1]]})` )
+}

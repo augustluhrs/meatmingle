@@ -9,7 +9,7 @@ const options = {
   maxRefractory: 2000,
   minInheritance: .05, //making this a percentage now
   maxInheritance: .85,
-  minLubeToMate: 5, //now making this global so prepared makes more sense
+  minLubeToMate: 50, //now making this global so prepared makes more sense
   // maxLubeToMate: 50,
   minLubeEfficiency: 0.8,
   maxLubeEfficiency: 5,

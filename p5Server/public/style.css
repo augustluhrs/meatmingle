@@ -28,7 +28,7 @@ body {
 }
 
 .buttons {
-  margin: auto;
+  margin: 10px;
   background-color: rgb(108,112,45);
   color: white;
   /* font-size: 150%; */
@@ -67,7 +67,27 @@ body {
   border: 6px solid #9ad4fb; /* Chunky border */
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* Shadow */
   background-color: #f8aecf; /* Background color */
+}
 
+.poemDiv { /* i love chatgpt ^-^ */
+  font-family: "fugaz";
+  width: 100%;
+  height: 200%;  /* hmm */
+
+  /* height: 200px;   */
+  background: linear-gradient(to right, #a429d1, #164ef9); /* Adjust gradient colors and direction as needed */
+  border-radius: 10px; /* Add border radius for rounded corners */
+  color: white; /* Text color */
+  text-align: center; /* Center align text */
+  /* line-height: 200px; Vertically center text */
+  line-height: 200%; /* Vertically center text */
+  letter-spacing: 2px; 
+  font-size: 24px; /* Adjust font size as needed */
+  border: 2px solid black; /* Add black border */
+  box-sizing: border-box; /* Include border in box sizing */
+  /* -webkit-text-fill-color: transparent; Hide text fill color for compatibility */
+  -webkit-text-stroke: 1px black; /* Apply black stroke to text */
+  text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black; /* Create a similar effect using text-shadow */
 }
 
 
