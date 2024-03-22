@@ -70,6 +70,7 @@ inputs.on('connection', (socket) => {
     
     screen.emit("newGenny", newGenny);
     vibe.emit("newGenny", newGenny);
+    poemView.emit("newGenny", newGenny);
     // io.emit("newGenny", newGenny);
 
   });
@@ -150,6 +151,31 @@ vibe.on('connection', (socket) => {
   socket.on("newLube", (data) => {
     console.log("lube from vibe");
     lubeLocations.push(new Lube(D.options.lubeSize, data));
+  });
+
+  //listen for this client to disconnect
+  socket.on('disconnect', () => {
+    // console.log('vibe client disconnected: ' + socket.id);
+  });
+});
+
+//
+// poem view
+//
+
+let poemView = io.of('/poemView');
+poemView.on('connection', (socket) => {
+  console.log('new poemView client!: ' + socket.id);
+
+  socket.on("getEcosystemPoem", (data) => { //when poemView resets
+    // console.log('sending poemView the current gennies');
+    console.log(data);
+    for (let genny of gennies) {
+      socket.emit("newGenny", genny); //hmm forgot emit rules TODO
+      // io.to(data.id).emit("newGenny", genny);
+    }
+
+    // poemView.emit("changeSettings", {beatInterval: Beats.beatInterval});
   });
 
   //listen for this client to disconnect
@@ -329,6 +355,7 @@ function addRandomGenny(){
   
   screen.emit("newGenny", newGenny);
   vibe.emit("newGenny", newGenny);
+  poemView.emit("newGenny", newGenny);
   // io.emit("newGenny", newGenny);
 
   // console.log('new random Genny');

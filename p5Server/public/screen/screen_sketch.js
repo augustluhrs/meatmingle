@@ -63,11 +63,12 @@ socket.on('newGenny', (data) => {
     //add poem beats to queue 
     // console.log(poemQ);
     poemQ.push({poem: genny.poem, id: genny.id, beats: genny.beats, isActive: false, diedMidLine: false});
-    console.log(poemQ);
+    // console.log(poemQ);
    
     // addPoemBlock(genny.poem, genny.id);
 
-    addPoemDiv(genny, false);
+    addPoemDiv(genny, false, 'poem');
+    addPoemDiv(genny, false, 'panel');
 });
 
 socket.on('update', (data) => {
@@ -76,6 +77,20 @@ socket.on('update', (data) => {
     //if any gennies have dried out, remove their poem from the queue
     if (data.newHusks.length > 0) {
         for (let newHuskID of data.newHusks) {
+
+            if (poemQ[0].id == newHuskID) {
+
+            } else {
+                for (let [i, p] of poemQ.entries()) {
+                    if (poemQ.id == newHuskID) {
+                        poemQ
+                    }
+                }
+            }
+
+            //OLD SHITTTTTT
+
+            /*
             //remove from beat Queue
             let ignoreTop = false;
             for (let i = poemQ.length - 1; i >= 0; i--) {
@@ -111,6 +126,7 @@ socket.on('update', (data) => {
                     }
                 })
             }
+            */
             
 
         }
@@ -165,9 +181,6 @@ const sampler = new Tone.Sampler({
 // connect the player to the feedback delay and filter in parallel
 const filter = new Tone.Filter(400, 'lowpass').toDestination();
 sampler.connect(filter);
-
-
-
 
 
 //  synths.forEach(synth => synth.connect(gain));
@@ -525,16 +538,17 @@ let minutesElapsed = 0;
 let lastMinute = 0;
 let iDontKnowTone = 0;
 let beat = 1;
+let speedBeat = 8;
 function beatLoop(time) { //new Tone version
     iDontKnowTone++;
-    if (iDontKnowTone % 8 == 0) {
-        console.log(poemQ[0]);
+    if (iDontKnowTone % speedBeat == 0) {
+        // console.log(beat);
+        // console.log(poemQ[0]);
         // synths[2].triggerAttackRelease("C4", "8n");
 
         // console.log(poemQ);
         // if (poemQ.length < 2) {
         if (beat == 1) {
-
             // will only happen once per bar since by definition adding will increase length
             // poemQ.push(poemQ[0].slice());
             poemQ.push(structuredClone(poemQ[0]));
@@ -551,6 +565,8 @@ function beatLoop(time) { //new Tone version
         // speech.speak("meat");
 
         poemQ[0].beats.splice(0, 1); //remove the beat that was just spoken
+        
+        
         // if (poemQ[0].beats.length < 1) {
             //remove the karaoke block at the top (should be matching id...)
             //but only if genny is still alive, or else will throw error
@@ -582,23 +598,27 @@ function beatLoop(time) { //new Tone version
             // }
 
             //remove line after last beat is spoken
-            poemQ.splice(0, 1);
+            // poemQ.splice(0, 1);
          
         
         if (beat == 4) {
             //new bar
-            console.log("bar");
+            // console.log("bar");
             // prevBar = prevTime;
             beat = 1;
             // bgHue += 360/8;
+            poemQ.splice(0, 1);
+            //shift panel
+            document.getElementById('panel').appendChild(document.getElementById(poemQ[0].id));
         } else {
             beat++;
         }
 
     }
 }
+
 /*
-function beatLoop() { //auto from poemQ
+function speechLoop(beat) { //auto from poemQ
     let currentTime = millis();
     if (currentTime - prevTime >= beatInterval) { //hmm will this actually be on beat or will it depend on loop/browswer?
         prevTime = currentTime;
@@ -687,6 +707,7 @@ function beatLoop() { //auto from poemQ
 }
 */
 
+
 // let prevTime = 0;
 let interval = 1905; //126 bpm (MAMI) = 2.1 per second, so each 4 beat bar is ~1905ms
 function testVoiceLoop(){
@@ -718,9 +739,9 @@ let generationColors = [
     "#f1cb3c", //gold
 ]
 
-function addPoemDiv(genny, isHusk) {
+function addPoemDiv(genny, isHusk, parent) {
     //removes/adds to karaoke queue unless husk, then removes from queue and adds to poem
-    let newDiv = createDiv(genny.poem).class('poemDiv').parent('poem').id(genny.id);
+    let newDiv = createDiv(genny.poem).class('poemDiv').parent(parent).id(genny.id);
     // rn limiting to max color 9 generations
     // console.log(genny.generations);
 
@@ -730,4 +751,8 @@ function addPoemDiv(genny, isHusk) {
     // console.log(genny.generations);
     document.getElementById(genny.id).style.backgroundImage = `linear-gradient(to right, ${generationColors[genny.generations[0]]}, ${generationColors[genny.generations[1]]})`;
     // newDiv.style('background', `linear-gradient(to right, ${generationColors[genny.generations[0]]}, ${generationColors[genny.generations[1]]})` )
+
+    if (parent == "poem") {
+        document.querySelector('#poem').insertBefore(newDiv.elt, parent.firstChild);
+    }
 }
