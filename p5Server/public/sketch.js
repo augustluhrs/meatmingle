@@ -30,6 +30,7 @@ let maxRadius = 120;
 let canvas;
 let statsDiv, colorDiv, readyDiv, nameDiv, yesDiv, noDiv;
 let statsButton, colorButton, readyButton, nameInput;
+let poemViewButton;
 let poemInput;
 let yesButton, noButton;
 let colorPickerPrimary, colorPickerSecondary, colorPickerHair;
@@ -176,6 +177,8 @@ function setup(){
         poemInput.hide();
         yesButton.hide();
         noButton.hide();
+        poemViewButton.show();
+
         state = "done";
     });
     yesButton.hide();
@@ -184,6 +187,7 @@ function setup(){
     noButton = createButton("NO").class("buttons").parent("noDiv").size(width/7, height/14).mousePressed(() => {
         yesButton.hide();
         noButton.hide();
+        poemViewButton.hide();
         state = "stats";
         statsButton.show();
         colorButton.show();
@@ -191,6 +195,11 @@ function setup(){
     });
     noButton.hide();
 
+    poemViewButton = createButton("go to poem view").class("buttons").mousePressed(() => {
+      window.location.assign(window.location + "/poemview");
+  });
+  poemViewButton.position(width/2, height/2);
+  poemViewButton.hide();
     //css font-size
     let inputs = document.getElementsByClassName('inputs');
     let classText = (width/30).toString() + "px";

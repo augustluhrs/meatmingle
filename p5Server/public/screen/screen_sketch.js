@@ -62,7 +62,7 @@ socket.on('newGenny', (data) => {
 
     //add poem beats to queue 
     // console.log(poemQ);
-    poemQ.push({poem: genny.poem, id: genny.id, beats: genny.beats, isActive: false, diedMidLine: false});
+    poemQ.push({poem: genny.poem, id: genny.id, needsToDie: false, beats: genny.beats, isActive: false, diedMidLine: false});
     // console.log(poemQ);
    
     // addPoemBlock(genny.poem, genny.id);
@@ -79,11 +79,17 @@ socket.on('update', (data) => {
         for (let newHuskID of data.newHusks) {
 
             if (poemQ[0].id == newHuskID) {
-
+                // poem[0].needsToDie = true;
+                //ignore
             } else {
-                for (let [i, p] of poemQ.entries()) {
-                    if (poemQ.id == newHuskID) {
-                        poemQ
+                for (let i = poemQ.length - 1; i >= 0; i--) {
+                    if (poemQ[i].id == newHuskID) {
+                        // console.log(index);
+                    //    let index = poemQ.findIndex(p);
+                       console.log(i);
+
+                       poemQ.splice(i, 1);
+                       break;
                     }
                 }
             }
