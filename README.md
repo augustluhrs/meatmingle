@@ -9,26 +9,6 @@ A generative poetry ecosystem where participants create genital critters, "genni
 
 ![screengrab of prototype karaoke queue](documentation/sometimespoem.png)
 
-## Special Thanks
-
-- Sara Dee
-- Todd Anderson
-- Duncan Figurski
-- Julia && Heather
-- Dan Shiffman
-- Harry Macinnis
-- Tiri Kananuruk
-- Allison Parrish
-- Dave Currie
-- Marcel Truxillo
-- Schuyler DeVos
-- Matt Ross
-- Brent Bailey
-- James Hosken
-- John Bezark
-
-![CLI showing early syllable check on crossover poem lines](documentation/yeahbitch.png)
-
 ## Credits
 
 ### subconscious references
@@ -50,38 +30,91 @@ A generative poetry ecosystem where participants create genital critters, "genni
 - [pillow background via stable diffusion](https://stablediffusionweb.com/app/image-generator)
 - [hair clip art]() -- i forgot where i'm sorry -_-
 
+### Special Thanks
+
+- Sara Dee
+- Todd Anderson
+- Duncan Figurski
+- Julia && Heather
+- Dan Shiffman
+- Harry Macinnis
+- Tiri Kananuruk
+- Allison Parrish
+- Dave Currie
+- Marcel Truxillo
+- Schuyler DeVos
+- Matt Ross
+- Brent Bailey
+- James Hosken
+- John Bezark
+
 ## License
 
 CC-BY-NC
 
+![CLI showing early syllable check on crossover poem lines](documentation/yeahbitch.png)
+
 ## TODO
 
+- [ ] Changelog
+- [ ] V2 bug fixes
+  - [ ] queue matching speech
+  - [ ] mobile
+    - [ ] mobile red bar
+    - [ ] mobile font
+    - [ ] mobile elements centered
+    - [ ] poem screen refresh
+- [ ] V2 features
+  - [ ] tone js
+    - [ ] new loops
+    - [ ] loops based on environmental state
+    - [ ] wetness filter
+  - [ ] new shapes for classes
+  - [ ] sex pause
+  - [ ] more than one parent?
+  - [ ] shader for movement
+  - [ ] shader for glitch sex
+    - [ ] porn texture during sex?
+  - [ ] controls
+    - [ ] flocking
+    - [ ] volume
+    - [ ] music stuff
+      - [ ] bpm adjustment
+      - [ ] options
+      - [ ] mute
+    - [ ] mutation
+  - [ ] line drawing version
+    - [ ] line array test with shader
+    - [ ] line crossover
+  - [ ] title on screen
+  - [ ] hover to show genny stats
+  - [ ] parents/family tree view
 - [ ] Version 1 bug fixes
-  - [ ] fix wetness / lube
+  - [X] fix wetness / lube
   - [X] fix nuclear fission reproduction
   - [X] fix DNA poem in nuclear children
   - [X] fix string commas
   - [ ] fix rotation
   - [ ] fix face flip on X
-  - [ ] add genny view to mobile interface
-  - [ ] fix no reproduction when ready and touching
+  - [X] add genny view to mobile interface
+  - [X] fix no reproduction when ready and touching
   - [X] add more separation when not ready
   - [ ] fix input line font size
   - [X] fix child hues
 - [ ] p5 version updates
-  - [ ] text box with lines that appear in a scroll bar window
-  - [ ] population control
+  - [X] text box with lines that appear in a scroll bar window
+  - [X] population control
   - [ ] updated assets
     - [ ] bodies
     - [ ] zones
     - [ ] hair
-    - [ ] lube (poppers too?)
-    - [ ] background
+    - [X] lube (poppers too?)
+    - [X] background
   - [ ] asset tools
     - [ ] check generative stuff
     - [ ] check modular shapes
     - [ ] pixels/silhouettes censoring
-  - [ ] misc
+  - [X] misc
     - [X] random Genny button on screen
       - [X] random poem lines
     - [X] mutation word list
@@ -89,7 +122,7 @@ CC-BY-NC
 - [ ] musical version
   - [X] TTS p5.speech
   - [X] pronouncing syllable check
-  - [ ] strudel? or ableton with some sort of sync?
+  - [X] tone.js ~~strudel? or ableton with some sort of sync?~~
   - [ ] animation to a beat
   - [ ] pitch adjustment auto-tune a la Harry
   - [ ] samples / loops
@@ -100,9 +133,11 @@ CC-BY-NC
     - [ ] synth bass loops
     - [ ] nasty filter
 - [ ] wand controller
-  - [ ] why
+  - [X] why
+  - [ ] fix mouse movement
 - [ ] hosting
-  - [ ] glitch test
+  - [X] glitch test
+  - [ ] optimize for glitch
 - [ ] backup plans
   - [ ] hack defense
     - [ ] how to hide source code / prevent code from executing in console?
@@ -117,50 +152,6 @@ CC-BY-NC
     - [ ] animation
     - [ ] AI logic
     - [ ] websocket or OSC connection
-
-### TIMELINE
-
-Time
-
-- 1 day for v1 Fixes
-- .5 day for Assets
-- .5 for Poem Box
-________________
-
-- 1 Day for wand controller
-  
-__________________
-
-- 1 day for text to speech
-- 1 day for syllable and queue
--  for music
-   -  trigger signal from bpm
-
-[Thursday]
-
-[Friday]
-
-[Saturday]
-
-[Sunday]
-
-[Monday]
-
-[Tuesday]
-
-[Wednesday]
-
-- [ ]
-
-[Thursday]
-
-- [ ] Pack
-- [ ] Tech Check
-- [ ] PERFORM
-
-- remove DNA
-- rework mate/lube timers and flags
-- add some sort of expiration (either from wetness or a chance after offspring -- might be better to do it that way so that the gennies are guaranteed at least one impact vs roaming around and never mating then dying. could still have it be a wetness thing, since it would make sense and be funny to show them being so dry that they just are a husk that blows away in the wind. the amount of wetness you lose on procreation )
 
 ## Intro
 
