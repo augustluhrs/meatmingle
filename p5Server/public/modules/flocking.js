@@ -16,7 +16,7 @@ class Boid {
         this.pos = genny.pos;
         this.r = genny.radius;
         // this.posVector = new Victor(this.pos.x, this.pos.y);
-        this.perceptionRadius = genny.perceptionRadius || 500;
+        this.perceptionRadius = genny.perceptionRadius || 400;
         this.maxSpeed = genny.maxSpeed;
         this.maxForce = genny.maxForce || 0.05;
         this.desiredSeparation = genny.desiredSeparation || 80;
@@ -32,7 +32,7 @@ class Boid {
     run (self, gennies, lubeLocations) {
         //first adjust biases if not ready to mate
         this.separationBias = (self.isTooDry) ? 20 : 1;
-        this.cohesionBias = (self.isHorny) ? 5 : 1;
+        this.cohesionBias = (self.isHorny) ? 50 : 20;
         this.alignmentBias = (self.isReadyToMate) ? 10: 5;
 
         let surroundings = this.lookAround(self, gennies, lubeLocations);

@@ -368,10 +368,10 @@ let randomPoems = [
   // "plus hydro glide for your eyeballs",
   // "yeah idk what this is all about",
   // "shit i forgot to take my vitamins",
-  "wonderville is wonderful",
+  // "wonderville is wonderful",
   "august why are you like this",
-  "sometimes Todd, sometimes",
-  "Todd regrets inviting me",
+  // "sometimes Todd, sometimes",
+  // "Todd regrets inviting me",
   "lick that ice cream off the cone", //shout out to Only Fire <3
   "lets do yoga on the bed",
   "do you want to bump uglies",
