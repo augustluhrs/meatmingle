@@ -5,7 +5,11 @@ const Victor = require("victor");
 const Genny = require("./genny");
 const D = require("./defaults");
 
-let goalPolyculeSize = [2, 3, 4, 4, 5, 6, 7, 8, 9];
+// let goalPolyculeSize = [2, 3, 4, 4, 5, 6, 7, 8, 9];
+// let goalPolyculeSize = [2, 2, 2, 3, 3, 4, 4, 5];
+let goalPolyculeSize = [2, 2, 2, 3];
+
+
 
 //just for calculating the flocking forces, actual pos is outside
 class Boid {
@@ -14,26 +18,35 @@ class Boid {
         this.velocity = new Victor(D.map(Math.random(), 0, 1, -1, 1), D.map(Math.random(), 0, 1, -1, 1));
         // this.pos is external, this boid is just for motion force, but still need for qtree?
         this.pos = genny.pos;
-        this.r = genny.radius;
+        this.r = genny.radius; //actually diameter...
         // this.posVector = new Victor(this.pos.x, this.pos.y);
-        this.perceptionRadius = genny.perceptionRadius || 400;
+        this.perceptionRadius = D.options.perceptionRadius;
         this.maxSpeed = genny.maxSpeed;
-        this.maxForce = genny.maxForce || 0.05;
-        this.desiredSeparation = genny.desiredSeparation || 80;
-        this.separationBias = genny.separationBias || 10; //go down if ready to mate
-        this.desiredFlockSize = genny.desiredFlockSize || 12;
-        // this.desiredFlockSize = genny.desiredFlockSize || goalPolyculeSize[Math.floor(Math.random() * goalPolyculeSize.length)]; //num people they want around
-        this.alignmentBias = genny.alignmentBias || 1;
-        this.cohesionBias = genny.cohesionBias || 1.5;
+        this.maxForce = genny.maxForce || D.options.maxForce;
+        // this.desiredSeparation = D.options.desiredSeparation;
+        this.desiredSeparation = this.r;
+
+        // this.desiredFlockSize = genny.desiredFlockSize || 3; //prev 12 but useless
+        this.desiredFlockSize = genny.desiredFlockSize || goalPolyculeSize[Math.floor(Math.random() * goalPolyculeSize.length)]; //num people they want around
+        this.alignmentBias = D.options.alignmentBias;
+        this.cohesionBias = D.options.cohesionBias;
+        this.separationBias = D.options.separationBias; //go down if ready to mate
+
         this.hunger = genny.hunger || 10; //to mult food seeking
+
+        console.log(this);
     }
 
     // main genny flocking/lube/mate function
     run (self, gennies, lubeLocations) {
         //first adjust biases if not ready to mate
-        this.separationBias = (self.isTooDry) ? 20 : 1;
-        this.cohesionBias = (self.isHorny) ? 50 : 20;
-        this.alignmentBias = (self.isReadyToMate) ? 10: 5;
+        this.separationBias = (self.isTooDry) ? D.options.separationBias * 50 : D.options.separationBias;
+        this.cohesionBias = (self.isReadyToMate) ? D.options.cohesionBias * 2 : D.options.cohesionBias;
+        this.alignmentBias = (self.isHorny) ? D.options.alignmentBias * 1.25 : D.options.alignmentBias;
+
+        // this.separationBias = (self.isTooDry) ? 20 : 1;
+        // this.cohesionBias = (self.isHorny) ? 50 : 20;
+        // this.alignmentBias = (self.isReadyToMate) ? 10: 5;
 
         let surroundings = this.lookAround(self, gennies, lubeLocations);
         this.flock(surroundings.neighbors);
@@ -85,7 +98,7 @@ class Boid {
                 //will they get stuck between lube? maybe should check for biggest lube? or depends... -- edit: yes, TODO FIX
                 let lubeVec = new Victor(lube.pos.x, lube.pos.y);
                 let hunger = this.seek(lubeVec);
-                hunger.multiply(new Victor(this.hunger, this.hunger));
+                hunger.multiply(new Victor(this.hunger, this.hunger)); //what the hell is this? 2/22/25
                 this.applyForce(hunger);
             }
         });
@@ -94,6 +107,17 @@ class Boid {
 
     cruise (self, neighbors) {
         let mate = undefined;
+        if (!self.isReadyToMate){ return mate; }
+        for (let neighbor of neighbors) {
+            //now telling them to seek others who are ready to mate
+            if ( neighbor.isReadyToMate && self.isReadyToMate) { 
+                let mateVec = new Victor(neighbor.pos.x, neighbor.pos.y);
+                let hunger = this.seek(mateVec);
+                hunger.multiply(new Victor(this.hunger, this.hunger));
+                this.applyForce(hunger);
+                break; 
+            }
+        }
         for (let neighbor of neighbors) {
             if (Math.hypot((self.pos.x - neighbor.pos.x), (self.pos.y - neighbor.pos.y)) <= (self.radius / 2 + neighbor.radius / 2) &&
                 self.isReadyToMate) { 
@@ -101,7 +125,7 @@ class Boid {
                 // console.log("mate", mate);
                 break; 
             }
-          }
+        }
 
         return mate;
     }
@@ -120,9 +144,13 @@ class Boid {
         let alignment = this.alignment(gennies);
         let cohesion = this.cohesion(gennies);
 
+        // console.log(separation.magnitude(), alignment.magnitude(), cohesion.magnitude());
+       
         separation.multiply(new Victor(this.separationBias, this.separationBias));
         alignment.multiply(new Victor(this.alignmentBias, this.alignmentBias));
         cohesion.multiply(new Victor(this.cohesionBias, this.cohesionBias));
+
+        // console.log(separation.magnitude(), alignment.magnitude(), cohesion.magnitude());
 
         this.applyForce(separation);
         this.applyForce(alignment);
@@ -160,10 +188,8 @@ class Boid {
         desired.normalize(); //removing to see if limit is enough, per james' suggestion 1/11
         desired.multiply(new Victor(this.maxSpeed, this.maxSpeed));
         let steer = desired.subtract(this.velocity);
-        // let test = this.limit(steer, this.maxForce);
-        // console.log("test " + test);
+        steer.multiply(new Victor(D.options.hungerBias, D.options.hungerBias)); //1.0.2 added to overcome separation
         steer = this.limit(steer, this.maxForce);
-        // console.log(steer);
         return steer;
     }
 
@@ -206,7 +232,7 @@ class Boid {
         let count = 0;
         for (let genny of gennies) {
             let d = this.pos.distance(genny.pos);
-            if (d > 0 && d < this.desiredFlockSize) {
+            if (d > 10 && count < this.desiredFlockSize) {
                 sum.add(genny.boid.velocity);
                 count++;
             }
@@ -232,7 +258,7 @@ class Boid {
         let count = 0;
         for (let genny of gennies) {
             let d = this.pos.distance(genny.pos);
-            if (d > 0 && d < this.desiredFlockSize) {
+            if (d > 10 && count < this.desiredFlockSize) {
                 sum.add(genny.pos);
                 count++;
             }

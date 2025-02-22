@@ -24,8 +24,10 @@ let images = {
   zones: [],
   hair: []
 }
-let minRadius = 50;
-let maxRadius = 120;
+//from defaults.js -- nvm, radius is only for displaying here, server maps it from .generous
+// let minRadius = options.minRadius;
+// let maxRadius = options.maxRadius;
+let minRadius, maxRadius;
 
 let canvas;
 let statsDiv, colorDiv, readyDiv, nameDiv, yesDiv, noDiv;
@@ -36,6 +38,7 @@ let yesButton, noButton;
 let colorPickerPrimary, colorPickerSecondary, colorPickerHair;
 let type = "";
 let state = "stats";
+let isPoemValid = false;
 
 let xAxis = Math.floor(Math.random() * 16);
 let yAxis = Math.floor(Math.random() * 16);
@@ -68,6 +71,7 @@ let genny = {
   thirsty: xAxis,
   generous: 16 - xAxis,
   radius: 100,
+  // radius: options.minRadius * 1.5,
   position: {x: 0, y: 0}, //will get overwritten on server
 }
 
@@ -92,7 +96,9 @@ function setup(){
     textSize(width/40);
     strokeWeight(2);
     // colorMode();
-
+    
+    minRadius = width/8;
+    maxRadius = width/4;
     genny.radius = map(this.generous, 0, 16, minRadius, maxRadius);
 
     //images
@@ -117,19 +123,32 @@ function setup(){
     colorPickerHair.hide();
 
     //UI
-    poemInput = createInput("type a line of poetry here (2-12 words)").class("inputs").position(0, 0).size(width - 50, 1.5 * height/10);
+    poemInput = createInput("click to type a line of poetry here (2-12 words)").class("inputs").position(0, 0).size(width - 50, 1.5 * height/10);
     poemInput.center("horizontal");
     poemInput.elt.addEventListener('focus', function(event) { //thanks chat gpt
       event.target.value = '';
       event.target.removeEventListener('focus', arguments.callee)
     })
     poemInput.changed(()=>{
-      if (poemInput.value().length > 12 || poemInput.value() < 2) {
+      //handling the valid check here
+      if (genny.poem == "click to type a line of poetry here (2-12 words)" ||
+          genny.poem.split(" ").length > 12 || genny.poem.length > 100 ||
+          genny.poem.split(" ").length < 2 || 
+          (genny.poem.split(" ").length == 2 && genny.poem.split(" ")[1] == "")){
+        isPoemValid = false;
         poemInput.style('background-color', '#ee2222');
+        readyButton.html("invalid poem");
       } else {
+        isPoemValid = true;
         poemInput.style('background-color', '#6c702d');
-
+        readyButton.html("create?");
       }
+      // if (poemInput.value().length > 12 || poemInput.value() < 2) {
+      //   poemInput.style('background-color', '#ee2222');
+      // } else {
+      //   poemInput.style('background-color', '#6c702d');
+
+      // }
     })
 
     statsDiv = createDiv("").id("statsDiv").class("divs").position(0, 9 * height/10).size(width/3, height/10);
@@ -140,6 +159,8 @@ function setup(){
         colorPickerHair.hide();
     });
     statsButton.size(width/5, height/14).parent("statsDiv");
+    statsButton.position((statsDiv.width / 2) - (statsButton.width / 2), 0);
+
 
     colorDiv = createDiv("").id("colorDiv").class("divs").position(width/3, 9 * height/10).size(width/3, height/10);
     colorButton = createButton("looks").class("buttons").mousePressed(() => {
@@ -149,9 +170,14 @@ function setup(){
         colorPickerHair.show();
     });
     colorButton.size(width/5, height/14).parent("colorDiv");
+    colorButton.position((colorDiv.width / 2) - (colorButton.width / 2), 0);
+
 
     readyDiv = createDiv("").id("readyDiv").class("divs").position(2*width/3, 9 * height/10).size(width/3, height/10);
-    readyButton = createButton("ready").class("buttons").mousePressed(() => {
+    readyButton = createButton(" ").class("buttons").mousePressed(() => {
+      if(!isPoemValid){
+        //hmm
+      } else {
         state = "ready";
         yesButton.show();
         noButton.show();
@@ -161,8 +187,11 @@ function setup(){
         colorPickerPrimary.hide();
         colorPickerSecondary.hide();
         colorPickerHair.hide();
+      }
+        
     });
     readyButton.size(width/5, height/14).parent("readyDiv");
+    readyButton.position((readyDiv.width / 2) - (readyButton.width / 2), 0);
 
     yesDiv = createDiv("").id("yesDiv").class("divs").position(0, 7 * height/10).size(width/2, height/10);
     yesButton = createButton("YES").class("buttons").parent("yesDiv").size(width/7, height/14).mousePressed(() => {
@@ -225,7 +254,7 @@ function setup(){
 
     //genny info
     genny.position.x = width/2;
-    genny.position.y = 2.5 * height / 10;
+    genny.position.y = 2.75 * height / 10;
     type = checkType();
 };
 
@@ -254,7 +283,7 @@ function draw(){
     // textSize(width/20);
     // text("the", width / 2, 1.65 * height / 10);
     textSize(width/15);
-    text(type, width / 2, 4 * height / 10);
+    text(type, width / 2, 4.25 * height / 10);
     pop();
 
     updateGenny();

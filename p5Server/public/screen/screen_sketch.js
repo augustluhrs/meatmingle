@@ -86,7 +86,7 @@ socket.on('update', (data) => {
                     if (poemQ[i].id == newHuskID) {
                         // console.log(index);
                     //    let index = poemQ.findIndex(p);
-                       console.log(i);
+                    //    console.log(i);
 
                        poemQ.splice(i, 1);
                        break;
@@ -202,7 +202,8 @@ let updates = {
     husks: [],
     newHusks: [],
 };
-let lubeSize = 20;
+// let lubeSize = 20;
+let lubeSize;
 
 // p5.speech TTS
 let speech;
@@ -262,6 +263,7 @@ function setup(){
     // textFont(font);
     textAlign(CENTER, CENTER);
     noStroke();
+    lubeSize = width / 12;
 
     //asset resize
     // images.body[0].resize(100, 100); //blob1
@@ -271,6 +273,8 @@ function setup(){
 
     //for face emojis
     // textSize(width/40);
+
+    
     
     //UI
     randomGennyButton = createButton("RANDOM GENNY").class("buttons").parent("controls").mousePressed(() => {socket.emit("makeRandomGenny")});
@@ -406,7 +410,7 @@ function draw(){
     }
 
     push();
-    textSize(30);
+    textSize(lubeSize);
     for (let lube of updates.lubeLocations) {
         // fill(255);
         // ellipse(lube.pos.x, lube.pos.y, lubeSize);

@@ -7,7 +7,6 @@ const Boid = require("./flocking");
 const Pron = require('../libraries/pronouncing');
 const Beats = require("./beats");
 
-
 //poem moderation library
 const {
 	RegExpMatcher,
@@ -326,16 +325,16 @@ class Genny {
 let mutationWords = [
   "meat",
   "mingle",
-  "noody",
-  "word",
-  "hack",
-  "wordhack",
+  // "noody",
+  // "word",
+  // "hack",
+  // "wordhack",
   "wonderville",
   "brooklyn",
-  "todd",
+  // "todd",
   "art",
   "poem",
-  "theythem",
+  // "theythem",
   "moist",
   "bounce",
   "poem",
@@ -357,23 +356,23 @@ let mutationWords = [
   "hard",
   "ass",
   "bussy",
-  "thussy",
+  // "thussy",
   "throat",
   // "pussy",
   // "tits",
   // "whore",
   "horse",
-  "gristle",
+  // "gristle",
   "bits",
   "balls",
   "pulse",
   "throb",
   // "member",
   // "flower",
-  "horseboy",
+  // "horseboy",
   "clit",
   "flaps",
-  "silicone",
+  // "silicone",
   "beef",
   "sausage",
   "cream",
@@ -384,7 +383,6 @@ let mutationWords = [
   "slick",
   // "kneel",
   "down",
-
 ]
 
 module.exports = Genny;

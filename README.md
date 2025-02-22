@@ -4,8 +4,9 @@
 
 A generative poetry ecosystem where participants create genital critters, "gennies", whose DNA is a line of poetry, and send them off to a poetry play party. When the gennies are lubed up enough and their refractory period is reset, they cruise around until they find another willing genny and ~~redacted~~ until a new little genny pops out whose DNA poem line is a cross of the parents'.
 
-*ITP Stupid Hackathon 2024* &&
-*WordHack March 2024*
+*ITP Stupid Hackathon* Jan. '24 &&
+*WordHack* March '24 &&
+*Destruction Junket's MindSwap #2: Doubles* Feb '25
 
 ![screengrab of prototype karaoke queue](documentation/sometimespoem.png)
 

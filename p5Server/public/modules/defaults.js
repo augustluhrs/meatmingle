@@ -1,10 +1,11 @@
 //stores common functions and variable options
 
 const options = {
-  minRadius: 60,
-  maxRadius: 140,
-  minSpeed: 0.25,
-  maxSpeed: 4,
+  minRadius: 100,
+  maxRadius: 200,
+  maxForce: 0.05, //prev 0.05;
+  minSpeed: 0.15, //prev .25
+  maxSpeed: 1, //prev 4
   minRefractory: 500,
   maxRefractory: 2000,
   minInheritance: .05, //making this a percentage now
@@ -19,7 +20,14 @@ const options = {
   lubeSize: 100,
   dryRate: 200, //how fast everyone dries out
   //no matetimer b/c that comes from refractory?
-  lubeEmojis: ['💦', '💦', '💦', '💦', '🧴', '🧴', '🧴'] //'🍆', '🍑'
+  lubeEmojis: ['💦', '💦', '💦', '💦', '🧴', '🧴', '🧴'], //'🍆', '🍑'
+  //flocking weights
+  alignmentBias: 0.5, //prev 5
+  cohesionBias: 0.25, //prev 20
+  separationBias: 1, 
+  desiredSeparation: 100,
+  perceptionRadius: 300,
+  hungerBias: 5,
 }
 
 // const ecoWidth = 1920;

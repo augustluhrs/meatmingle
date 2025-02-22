@@ -221,11 +221,11 @@ setInterval( () => {
       });
 
       lubeLocations.splice(lubeIndex, 1);
-      console.log(genny.wetness);
-      console.log(genny.lubeEfficiency);
-      console.log(D.options.lubeSize);
+      // console.log(genny.wetness);
+      // console.log(genny.lubeEfficiency);
+      // console.log(D.options.lubeSize);
       genny.wetness += D.options.lubeSize * genny.lubeEfficiency; //prepared gennies make more use of the lube they find...
-      console.log(genny.wetness);
+      // console.log(genny.wetness);
       
     }
 
