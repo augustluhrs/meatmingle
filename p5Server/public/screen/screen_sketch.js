@@ -216,7 +216,7 @@ let poemQ = []; //stores the lines to be read on beat, {id, beats}, recycles las
 
 //ui/display
 let font;
-let canvas;
+let canvas, panel, currentPoemQ;
 let randomGennyButton, pauseButton, resumeButton, clearLubeButton, startLoopButton, stopLoopButton; //buttons
 let muteCheckbox; //checkboxes
 let globalWetnessDiv, globalWetnessButton;
@@ -246,7 +246,12 @@ function setup(){
     // canvas = createCanvas(1080, 1080).class("divs"); //making room for panel
     canvas = createCanvas(1080, 1080); //making room for panel
     canvas.parent("page");
+
+    currentPoemQ = createDiv().id("currentPoemQ").parent("page");
+    currentPoemQ.position(1080, 0);
     panel = createDiv().id("panel").parent("page");
+    //new pos for queue hack
+    panel.position(1080, 270);
     
 
     // createCanvas(1920, 1080);
@@ -432,6 +437,9 @@ function draw(){
 
     //bpm check
     // text(runningBPM, 10, 10);
+
+    //hack for showing current line at top PoemQ 2/25
+    if (!poemQ.length < 1){`${currentPoemQ.html(poemQ[0].poem)}`};
 
     
 }
@@ -730,7 +738,7 @@ function testVoiceLoop(){
 
 //for adding to queue panel
 function addPoemBlock(poem, id){
-    let newBlock = createDiv(poem).class(`poemBlock ${id}`).parent("panel");
+    let newBlock = createDiv(poem).class(`poemBlock ${id}`).parent("panel"); // 2/23/25 WTF is this class? TODO
     // let newBlock = createDiv(poem).class(`poemBlock`).parent("panel");
     // newBlock.setAttribute('data-id', id);
     //don't need to append? 
