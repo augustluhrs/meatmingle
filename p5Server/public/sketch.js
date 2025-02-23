@@ -210,6 +210,7 @@ function setup(){
 
         state = "done";
     });
+    yesButton.position((yesDiv.width / 2) - (yesButton.width / 2), 0);
     yesButton.hide();
 
     noDiv = createDiv("").id("noDiv").class("divs").position(width/2, 7 * height/10).size(width/2, height/10);
@@ -222,6 +223,7 @@ function setup(){
         colorButton.show();
         readyButton.show();
     });
+    noButton.position((noDiv.width / 2) - (noButton.width / 2), 0);
     noButton.hide();
 
     poemViewButton = createButton("go to poem view").class("buttons").mousePressed(() => {
@@ -236,8 +238,9 @@ function setup(){
       input.style.fontSize = classText;
     }
     let buttons = document.getElementsByClassName('buttons');
+    let buttText = (width/34).toString() + "px";
     for (let butt of buttons) {
-      butt.style.fontSize = classText;
+      butt.style.fontSize = buttText;
     }
 
     //stats slider
