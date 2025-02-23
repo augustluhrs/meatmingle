@@ -61,10 +61,10 @@ CC-BY-NC
 - [ ] V2 bug fixes
   - [ ] queue matching speech
   - [ ] mobile
-    - [ ] mobile red bar
+    - [X] mobile red bar
     - [ ] mobile font
     - [ ] mobile elements centered
-    - [ ] poem screen refresh
+    - [ ] poem screen refresh button
 - [ ] V2 features
   - [ ] tone js
     - [ ] new loops

@@ -230,7 +230,7 @@ setInterval( () => {
     }
 
     //genny mates -- to be resolved in checkForMates() below
-    if (mate != undefined) {
+    if (mate != undefined) { //!==?
         mates.push({self: genny, mate: mate});
         // console.log('ilikeu');
     } else {

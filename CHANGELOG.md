@@ -2,7 +2,12 @@
 
 ## v1
 
-### v1.0.2 *2/21/25 830*
+### v1.0.3 *2/22/25*
+
+- glitch redirect test
+- slides for tomorrow
+
+### v1.0.2 *2/21/25 3.5hrs*
 
 #### server.js
 
